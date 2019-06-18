@@ -1,5 +1,7 @@
          package com.juyou.jqt;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.net.http.SslError;
 import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
@@ -8,6 +10,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.webkit.CookieSyncManager;
 import android.webkit.SslErrorHandler;
+import android.webkit.WebChromeClient;
 import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
@@ -83,9 +86,17 @@ import android.webkit.WebViewClient;
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 Log.e("my","shouldOverrideUrlLoading: " + url);
+                if(url!= null && url.startsWith("tel:")){
+                    Intent phoneIntent = new Intent( Intent.ACTION_DIAL, Uri.parse(url));
+                    phoneIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    // 启动
+                    startActivity(phoneIntent);
+                    return true;
+                }
                 return super.shouldOverrideUrlLoading(view, url);
             }
         });
+
         webView.loadUrl(url);
     }
 

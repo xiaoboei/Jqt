@@ -9,4 +9,11 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+
+    <style name="Theme.Splash" parent="android:Theme">
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowBackground">@mipmap/splash</item>
+    </style>
 </resources>
