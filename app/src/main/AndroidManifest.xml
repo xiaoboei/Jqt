@@ -23,6 +23,7 @@
             android:screenOrientation="portrait">
 
         </activity>
+        <activity android:name=".HelpActivity"/>
         <activity
             android:name=".SplashActivity"
             android:configChanges="keyboardHidden|orientation"
@@ -32,7 +33,7 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
+            
         </activity>
     </application>
 
