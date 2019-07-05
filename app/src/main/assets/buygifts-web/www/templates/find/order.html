@@ -1,0 +1,106 @@
+<ion-view view-title="订单填写" hide-tabs="true" hide-back-button="true">
+	<ion-nav-buttons side="left" back-or-home></ion-nav-buttons>
+	<ion-content class="bg-f4f4f4" overflow-scroll="true">
+		<div class="list">
+			<a class="item item-icon-right pd-0" ng-if="rightAddress" href="#/index/mine/address">
+				<div class="t-address">
+					<div class="t-address-tit">{{rightAddress.true_name}} {{rightAddress.telephone}}</div>
+					<div class="t-address-des">{{rightAddress.region_text}}{{rightAddress.address}}</div>
+				</div>
+				<i class="icon ion-ios-arrow-right co-cccccc fs-22"></i>
+			</a>
+			<a class="item item-icon-right pd-0" ng-if="!rightAddress" href="#/index/mine/address/add">
+				<div class="t-address">
+					<div class="t-address-add">添加收货地址</div>
+				</div>
+				<i class="icon ion-ios-arrow-right co-cccccc fs-22"></i>
+			</a>
+		</div>
+		<div class="list">
+			<a class="t-mine-order-tb" ng-repeat="item2 in productData" href="#/index/find/art/{{item2.product_id}}">
+				<div class="t-mine-order-tb-img" style="width:80px;"><img ng-src="{{item2.upfile}}" style="width:80px; height:80px; " alt="" /></div>
+				<div class="t-mine-order-tb-con">
+					<div class="t-mine-order-tb-con-tit">{{item2.name}}</div>
+					<div style="color:#999;font-size:12px">款式：{{item2.style_name}}</div>
+					<div style="color:#f9da63;font-size:12px">发货时间：卖家承诺12小时内发货</div>
+					<div class="t-mine-order-tb-con-num" style="color:#ba2e50;">￥<span style="font-size:16px;">{{item2.price}}</span><p style="float:right">X<span style="font-size:16px;">{{item2.num}}</span></p></div>
+					<!-- <div class="t-mine-order-tb-con-price">{{item2.price | currency:"￥"}}</div> -->
+				</div>
+			</a>
+			<!-- <a class="item item-icon-right pd-10" ui-sref="index.find-order-product">
+				<div class="t-pro-list">
+					<div class="t-pro-list-imgs">
+						<a class="t-pro-list-img" ng-repeat="item in productData" href="#/index/find/art/{{item.product_id}}"><img ng-src="{{item.upfile}}" alt="" /></a>
+						<div class="t-pro-list-img" ng-repeat="item in productData | limitTo:3"><img ng-src="{{item.upfile}}" alt="" /></div>
+					</div>
+					<div class="t-pro-list-r">共{{wantToBuyData.total_num}}件</div>
+				</div>
+				<i class="icon ion-ios-arrow-right co-cccccc fs-22"></i>
+			</a> -->
+		</div>
+		<div class="list" style="display:none;">
+			<a class="item item-icon-right" ui-sref="index.find-order-bill">
+				<div class="t-order-text">
+					<div class="t-order-text-l">
+						<div class="t-order-text-des"></div>
+						<div class="t-order-text-des co-999999">发票信息</div>
+						<div class="t-order-text-des"></div>
+					</div>
+					<div class="t-order-text-r">
+						<div class="t-order-text-des">{{invoiceData.type}}</div>
+						<div class="t-order-text-des">{{invoiceData.head}}</div>
+						<div class="t-order-text-des">{{invoiceData.content}}</div>
+					</div>
+				</div>
+				<i class="icon ion-ios-arrow-right co-cccccc fs-22"></i>
+			</a>
+		</div>
+		<div class="list">
+			<a class="item item-icon-right" href="#/index/find/order/coupon">
+				<div class="t-order-text">
+					<div class="t-order-text-l">
+						<div class="t-order-text-des co-999999">优惠券</div>
+					</div>
+					<div class="t-order-text-r">
+						<div class="t-order-text-des" ng-bind="coupon_price == 0 ? '未使用' : '面值' + old_coupon_price + '元，可抵用' + coupon_price + '元'"></div>
+					</div>
+				</div>
+				<i class="icon ion-ios-arrow-right co-cccccc fs-22"></i>
+			</a>
+		</div>
+		<div class="list">
+			<div class="item item-icon-right">
+				<div class="t-order-text">
+					<div class="t-order-text-l">
+						<div class="t-order-text-des co-999999">商品金额</div>
+						<div class="t-order-text-des co-999999">运费</div>
+						<div class="t-order-text-des co-999999">优惠券</div>
+						<div class="t-order-text-des co-999999">总金额</div>
+					</div>
+					<div class="t-order-text-r">
+						<div class="t-order-text-des assertive">+{{wantToBuyData.total_price | currency:"￥"}}</div>
+						<div class="t-order-text-des assertive">+{{wantToBuyData.total_exp_charge | currency:"￥"}}</div>
+						<div class="t-order-text-des assertive">-{{coupon_price_count | currency:"￥"}}</div>
+						<div class="t-order-text-des assertive">{{pay | currency:"￥"}}</div>
+					</div>
+				</div>
+				<!-- <i class="icon ion-ios-arrow-right co-cccccc fs-22"></i> -->
+			</div>
+		</div>
+
+        <div class="list">
+            <div class="item">
+                <input type="text" name="buyer_message" style="width:100%" placeholder="买家留言：选填，可填写您和卖家达成一致的要求" ng-model="order_data.buyer_message">
+            </div>
+        </div>
+
+        <div class="" style="height:50px;"></div>
+	</ion-content>
+
+	<!-- 结算 有全选 -->
+	<div class="t-order-submit">
+		<div class="t-order-submit-l">实付款：<em>{{pay | currency:"￥"}}</em></div>
+		<a class="t-order-submit-r" ng-click="goToCreate()">提交订单</a>
+	</div>
+	<!-- 结算 有全选 -->
+</ion-view>

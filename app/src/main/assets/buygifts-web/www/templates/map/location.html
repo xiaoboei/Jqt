@@ -1,0 +1,46 @@
+<!-- 如果有些页面想隐藏tab的话 在 ion-view 标签上添加 hide-tabs 属性 -->
+<ion-view view-title="城市定位" hide-back-button="true">
+<!-- <ion-nav-buttons side="right">
+<button class="button icon" ng-click="search()">完成</button>
+</ion-nav-buttons> -->
+    <ion-nav-buttons side="left">
+    <button ng-click="back()" class="button back-button buttons  button-clear header-item"><i class="icon ion-ios-arrow-back"></i> 
+<span class="back-text"></span></button>
+    </ion-nav-buttons>
+<ion-content>
+
+<div class="w-map-location">
+    <div class="search">
+        <input type="search" class="text" placeholder="输入城市名或拼音查询" id="Jname" ng-model="query">
+    </div>
+    <div class="location">
+        <p ng-if="cityName"><a href="javascript:;" class="arr" ng-click="changeCity(cityName)">当前定位 : {{cityName}}</a></p>
+        <!-- <p>定位失败, 请 <a href="">点击重新定位</a></p> -->
+    </div>
+    <div class="pupular">
+        <h5>国内热门城市</h5>
+        <div class="list">
+            <a href="javascript:;" ng-click="changeCity('广州市')">广州</a>
+            <a href="javascript:;" ng-click="changeCity('佛山市')">佛山</a>
+            <a href="javascript:;" ng-click="changeCity('阳江市')">阳江</a>
+            <!--<a href="javascript:;" ng-click="changeCity('深圳市')">深圳</a>-->
+            <!--<a href="javascript:;" ng-click="changeCity('杭州市')">杭州</a>-->
+            <!--<a href="javascript:;" ng-click="changeCity('上海市')">上海</a>-->
+            <!--<a href="javascript:;" ng-click="changeCity('北京市')">北京</a>-->
+            <!--<a href="javascript:;" ng-click="changeCity('成都市')">成都</a>-->
+        </div>
+    </div>
+    <dl class="city" ng-repeat="(k , v) in cities" id="c_{{k}}">
+        <dt>{{k}}</dt>
+        <dd ng-repeat="city in v"><a href="javascript:;" ng-click="changeCity(city.name)">{{city.name}}</a></dd>
+    </dl>
+
+</div>
+
+</ion-content>
+
+<div class="w-map-sort">
+    <a href="javascript:;" ng-click="view('c_'+k)" ng-repeat="(k,v) in cities">{{k}}</a>
+</div>
+</ion-view>
+

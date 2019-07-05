@@ -1,0 +1,120 @@
+<ion-view view-title="订单详情" hide-tabs="true" hide-back-button="true">
+	<ion-nav-buttons side="left" back-or-home></ion-nav-buttons>
+	<ion-content class="bg-f4f4f4" overflow-scroll="true">
+
+		<div class="list">
+			<a class="item">订单号：{{orderDate.number}}</a>
+		</div>
+		<div class="list">
+			<div class="item item-icon-right pd-0">
+				<div class="t-address">
+					<div class="t-address-tit">{{addressDate.true_name}} {{addressDate.telephone}}</div>
+					<div class="t-address-des">{{addressDate.address}}</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="t-mine-order">
+			<div class="t-mine-order-th">
+				<a class="t-mine-order-th-l" href="#/index/find/shop/{{orderDate.seller_id}}" ng-if="orderDate.seller_id != '0'">
+					<img ng-src="{{orderDate.seller_logo}}" alt="" />
+					<div class="t-mine-order-th-l-tit">{{orderDate.seller_name}}</div>
+				</a>
+				<div class="t-mine-order-th-r" ng-if="orderDate.status==1">待付款</div>
+				<div class="t-mine-order-th-r" ng-if="orderDate.status==2">等待商家发货</div>
+				<div class="t-mine-order-th-r" ng-if="orderDate.status==3">待确认收货</div>
+				<div class="t-mine-order-th-r" ng-if="orderDate.status==4">完成</div>
+				<div class="t-mine-order-th-r" ng-if="orderDate.status==5">待退款</div>
+				<div class="t-mine-order-th-r" ng-if="orderDate.status==6">已取消</div>
+				<div class="t-mine-order-th-r" ng-if="orderDate.status==7">待退货</div>
+                <div class="t-mine-order-th-r" ng-if="orderDate.status==8">已退货</div>
+			</div>
+			<a class="t-mine-order-tb" ng-repeat="item2 in orderDate.product" href="#/index/find/art/{{item2.product_id}}">
+				<div class="t-mine-order-tb-img"><img ng-src="{{item2.upfile}}" alt="" /></div>
+				<div class="t-mine-order-tb-con">
+					<div class="t-mine-order-tb-con-tit" style="width:70%;">{{item2.name}}</div>
+					<div class="t-mine-order-tb-con-num">X{{item2.num}}</div>
+					<div class="t-mine-order-tb-con-price">{{item2.price | currency:"￥"}}</div>
+				</div>
+			</a>
+		</div>
+
+        <div>
+            <div class="item">
+                <div class="">买家留言</div>
+                <div class="fs-12 co-999999">
+                    {{orderDate.buyer_message?orderDate.buyer_message:'暂无留言'}}
+                </div>
+            </div>
+        </div>
+
+		<div class="list">
+			<div class="item">支付方式<span class="item-note fs-12 assertive">{{payType}}</span></div>
+			<div class="item">
+                <div style="width:80%; float: left;">
+                    <div class="">配送信息</div>
+                    <div class="fs-12 co-999999" ng-if="orderDate.send_time == '0'">暂未配送</div>
+                    <!--<div class="fs-12 co-999999" ng-if="orderDate.send_time != '0'">配送日期：{{orderSendTime}}</div>-->
+                    <div class="fs-12 co-999999" ng-if="orderDate.express_sn">
+                        物流公司：{{orderDate.express}}
+                    </div>
+                    <div class="fs-12 co-999999" ng-if="orderDate.express_sn">
+                        物流单号：{{orderDate.express_sn}}
+                    </div>
+                </div>
+                <div class="t-order-detail-tf-r" style="width:20%; float: right; text-align: right; ">
+                   <a ng-if="orderDate.express_sn && orderDate.express_code !=-1" href="javascript:;" class="t-order-detail-tf-r-btn1" style="margin-top:15px;" ng-click="search_express()">查看物流</a>
+                </div>
+			</div>
+<!-- 			<div class="item">
+				<div class="">发票信息</div>
+				<div class="fs-12 co-999999">发票抬头：{{invoiceHead}}</div>
+				<div class="fs-12 co-999999">发票内容：{{invoiceContent}}</div>
+			</div> -->
+		</div>
+
+
+
+		<div class="list">
+			<div class="item">
+				<div class="t-order-text">
+					<div class="t-order-text-l">
+						<div class="t-order-text-des co-999999">商品金额</div>
+						<div class="t-order-text-des co-999999">+ 运费</div>
+						<div class="t-order-text-des co-999999">- 优惠券</div>
+					</div>
+					<div class="t-order-text-r">
+						<div class="t-order-text-des assertive">+{{orderDate.total_price | currency:"￥"}}</div>
+						<div class="t-order-text-des assertive">+{{orderDate.total_charge | currency:"￥"}}</div>
+						<div class="t-order-text-des assertive">-{{orderDate.coupon_price | currency:"￥"}}</div>
+					</div>
+				</div>
+
+			</div>
+			<div class="item">
+				<div class="t-order-text2">
+					<div class="t-order-text2-tit">实付款：<em class="assertive">{{orderDate.pay | currency:"￥"}}</em></div>
+					<div class="t-order-text2-des">下单时间：{{orderCreateTime}}</div>
+				</div>
+			</div>
+		</div>
+		<div class="" style="height:50px;"></div>
+	</ion-content>
+	<!-- 订单详情底部 -->
+	<div class="t-order-detail-tf">
+		<div class="t-order-detail-tf-l" ng-if="orderDate.status==1">
+			<i class="">待付款剩余时间</i>
+			<em>{{leftTimeAAA}}</em>
+		</div>
+		<div class="t-order-detail-tf-r">
+			<a ng-if="orderDate.status==1" class="t-order-detail-tf-r-btn1" ng-click="cancelOrder()">取消订单</a>
+			<a ng-if="orderDate.status==2" class="t-order-detail-tf-r-btn1" ng-click="cancelOrder()">取消订单</a>
+			<a ng-if="orderDate.status==1" class="t-order-detail-tf-r-btn2" href="#/index/find/pay/{{order_id}}">去支付</a>
+            <!--ng-click="locationPay(order_id)"-->
+			<a ng-if="orderDate.status==3" class="t-order-detail-tf-r-btn2" ng-click="receiptOrder()">确认收货</a>
+			<a ng-if="orderDate.status==4" class="t-order-detail-tf-r-btn2" href="#/index/mine/order/comment/{{order_id}}">评价</a>
+			<a ng-if="orderDate.status==6" class="t-order-detail-tf-r-btn2">已取消</a>
+		</div>
+	</div>
+	<!-- 订单详情底部 -->
+</ion-view>

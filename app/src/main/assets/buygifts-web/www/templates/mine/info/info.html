@@ -1,0 +1,55 @@
+<ion-view view-title="完善资料" hide-tabs="true" hide-back-button="true">
+	<!--<ion-nav-buttons side="left" back-or-home></ion-nav-buttons>-->
+    <ion-nav-buttons side="left">
+        <button class="button icon ion-ios-arrow-back button-clear" ng-click="goBack()"></button>
+    </ion-nav-buttons>
+<!-- 	<ion-nav-buttons side="right">
+		<button class="button button-small button-assertive" ng-click="edit(dataForm)">确定</button>
+	</ion-nav-buttons> -->
+	<ion-content overflow-scroll="true">
+		<div class="list">
+            <div class="t-mine-top" style="padding:0px;">
+                <div class="item t-mine-info-avt-new"  style="width: 150px; margin: 0 auto; border: none; background:transparent;">
+                    <a class="t-mine-top-user">
+                        <!--ng-click="isLoginGoUrl('index.mine-info')"-->
+                        <div class="t-mine-top-user-pic-new"><img ng-src="{{avt}}" alt="" /></div>
+                        <div class="t-mine-top-user-name-new">晒出您的靓照</div>
+                    </a>
+                    <input id="upfile" type="file" accept="image/jpg,image/jpeg,image/png,image/gif" />
+                </div>
+            </div>
+			<!--<div class="item item-icon-right">-->
+				<!--<div class="t-mine-info-avt">-->
+					<!--<div class="t-mine-info-avt-l">头像</div>-->
+					<!--<div class="t-mine-info-avt-r"><img id="Jpic" ng-src="{{avt}}" alt="" /></div>-->
+					<!--<input id="upfile" type="file" accept="image/jpg,image/jpeg,image/png,image/gif" />-->
+				<!--</div>-->
+				<!--<i class="icon ion-ios-arrow-right co-cccccc fs-22"></i>-->
+			<!--</div>-->
+
+                <form name="dataForm" novalidate>
+                    <a class="item item-icon-right" ui-sref="index.mine-info-username">用户昵称<span class="item-note">{{nickname}}</span><i class="icon ion-ios-arrow-right co-cccccc fs-22"></i></a>
+                    <!--<a class="item item-icon-right" ui-sref="index.mine-info-telephone">手机号码<span class="item-note">{{telephone}}</span><i class="icon ion-ios-arrow-right co-cccccc fs-22"></i></a>-->
+                    <div class="item">
+                        性别
+                        <span class="item-note">
+                            <label>
+                                <input type="radio" ng-change="editSex()" name="sex" value="1" ng-checked="dataObject.sex==1 ? true : false"   ng-model="dataObject.sex" />
+                                男
+                            </label>
+                            <label class="ml-20 pl-20">
+                                <input type="radio" ng-change="editSex()" name="sex" value="2" ng-checked="dataObject.sex==2 ? true : false" ng-model="dataObject.sex" />
+                                女
+                             </label>
+                        </span>
+                    </div>
+
+                        <div class="item pdt-50" style="border-bottom: none;">
+                            <input type="submit" value="完成" ng-click="goBack()" class="button button-outline button-block t-login-button wd-per-50"/>
+                        </div>
+                </form>
+
+            </div>
+        </div>
+	</ion-content>
+</ion-view>

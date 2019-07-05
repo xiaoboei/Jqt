@@ -1,0 +1,37 @@
+<ion-view view-title="发票" hide-tabs="true" hide-back-button="true">
+	<ion-nav-buttons side="left" back-or-home></ion-nav-buttons>
+	<ion-content class="bg-f4f4f4" overflow-scroll="true">
+
+	<form name="dataForm" novalidate>
+		<div class="t-order-bill">
+			<div class="t-order-bill-item">
+				<div class="t-order-bill-tit">发票类型</div>
+				<div class="t-order-bill-con">
+					<div ng-class="{true:'t-order-bill-btn1 t-order-bill-btn1-cur',false:'t-order-bill-btn1'}[isSelectTyoe]" ng-click="selectTyoe()">纸质发票</div>
+				</div>
+			</div>
+			<div class="t-order-bill-item">
+				<div class="t-order-bill-tit">发票抬头</div>
+				<div class="t-order-bill-con">
+					<label class="t-order-bill-contaitou">
+						<input type="text" name="head" placeholder="请输入发票抬头" ng-model="dataObject.head" required>
+					</label>
+				</div>
+			</div>
+			<div class="t-order-bill-item">
+				<div class="t-order-bill-tit">发票内容</div>
+				<div class="t-order-bill-con">
+					<div class="item item-checkbox checkbox-assertive" ng-repeat="item in billData">
+						<label class="checkbox"><input type="checkbox" ng-model="item.value" ng-change="aaa(item,$index)"></label>{{item.text}}
+					</div>
+				</div>
+			</div>
+
+			<div class="t-order-bill-item">
+			<div class="ma-10"><button class="button button-assertive button-block" ng-click="useBill(dataForm)">提交</button></div>
+			</div>
+		</div>
+	</form>
+
+	</ion-content>
+</ion-view>

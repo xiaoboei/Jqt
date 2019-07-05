@@ -1,0 +1,59 @@
+<ion-view view-title="导航" hide-back-button="true" hide-tabs="true">
+	<ion-nav-buttons side="left" back-or-home></ion-nav-buttons>
+	<ion-nav-title>
+	<form method="post" class="w-search-form">
+	<input type="text" class="w-search-input Jinput" type="search" id="_keyword">
+	</form>
+	</ion-nav-title>
+	<ion-nav-buttons side="right">
+	<a href="javascript:;" class="w-search-btn" ng-click="search()">搜索</a>
+	</ion-nav-buttons>
+	<ion-content overflow-scroll="true">
+		<div class="t-menu">
+			<div class="t-menu-l">
+				<a ng-repeat="item in menuData" ng-click="show(item)" ng-class="{'cur':item.is_show}">{{item.text}}</a>
+			</div>
+			<div class="t-menu-r" ng-repeat="item in menuData" ng-if="item.is_show">
+				<div class="t-menu-r-item" ng-repeat="item2 in item.children">
+					<div class="t-menu-r-tit">{{item2.text}}</div>
+					<div class="t-menu-r-con">
+						<a href="#/index/find/classify/{{item3.id}}" ng-repeat="item3 in item2.children"><img ng-src="{{item3.upfile}}" alt="" /><span>{{item3.text}}</span></a>
+					</div>
+				</div>
+			</div>
+		</div>
+<!-- 		<div class="t-menu">
+			<div class="t-menu-l">
+				<a href="" class="cur">地方土产</a>
+				<a href="">地方土产</a>
+				<a href="">地方土产</a>
+				<a href="">地方土产</a>
+				<a href="">地方土产</a>
+			</div>
+			<div class="t-menu-r">
+				<div class="t-menu-r-item">
+					<div class="t-menu-r-tit">纸质纪念品</div>
+					<div class="t-menu-r-con">
+						<a href=""><img src="http://temp.im/100x100" alt="" /><span>明信片</span></a>
+						<a href=""><img src="http://temp.im/100x100" alt="" /><span>明信片</span></a>
+						<a href=""><img src="http://temp.im/100x100" alt="" /><span>明信片</span></a>
+						<a href=""><img src="http://temp.im/100x100" alt="" /><span>明信片</span></a>
+						<a href=""><img src="http://temp.im/100x100" alt="" /><span>明信片</span></a>
+					</div>
+				</div>
+				<div class="t-menu-r-item">
+					<div class="t-menu-r-tit">纸质纪念品</div>
+					<div class="t-menu-r-con">
+						<a href=""><img src="http://temp.im/100x100" alt="" /><span>明信片</span></a>
+						<a href=""><img src="http://temp.im/100x100" alt="" /><span>明信片</span></a>
+						<a href=""><img src="http://temp.im/100x100" alt="" /><span>明信片</span></a>
+						<a href=""><img src="http://temp.im/100x100" alt="" /><span>明信片</span></a>
+						<a href=""><img src="http://temp.im/100x100" alt="" /><span>明信片</span></a>
+					</div>
+				</div>
+			</div>
+		</div> -->
+		
+
+	</ion-content>
+</ion-view>

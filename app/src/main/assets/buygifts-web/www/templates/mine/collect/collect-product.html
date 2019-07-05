@@ -1,0 +1,87 @@
+<ion-view view-title="我的收藏" hide-back-button="true">
+<!-- <ion-nav-buttons side="left" back-or-home></ion-nav-buttons> -->
+	<ion-nav-buttons side="left">
+		<button class="button icon ion-ios-arrow-back button-clear" ng-click="goToMine()"></button>
+	</ion-nav-buttons>
+	<ion-nav-title>
+		<div class="t-mine-collect-tab">
+			<a class="cur">收藏的商品</a>
+			<a ui-sref="index.mine-collect-talent">关注的达人</a>
+			<a ui-sref="index.mine-collect-shop">关注的商家</a>
+		</div>
+	</ion-nav-title>
+	<ion-content class="bg-f4f4f4">
+		<div class="list" ng-if="productData.one_month.length>0">
+			<div class="item fs-12 pdt-10 pdb-10">最近一个月收藏</div>
+			<a class="item item-icon-right" ng-repeat="item in productData.one_month" href="#/index/find/art/{{item.id}}">
+				<div class="t-mine-collect-product">
+					<div class="t-mine-collect-product-pic"><img ng-src="{{item.upfile}}" alt=""></div>
+					<div class="t-mine-collect-product-tb">
+						<div class="t-mine-collect-product-tit">{{item.name}}</div>
+						<div class="t-mine-collect-product-tf">
+							<div class="t-mine-collect-product-tf-l">{{item.price | currency:"￥"}}</div>
+							<div class="t-mine-collect-product-tf-r cur">{{item.collection}}</div>
+						</div>
+					</div>
+				</div>
+				<i class="icon ion-ios-arrow-right co-cccccc fs-22"></i>
+			</a>
+<!-- 			<a class="item item-icon-right" href="">
+				<div class="t-mine-collect-product">
+					<div class="t-mine-collect-product-pic"><img ng-src="http://temp.im/100x100" alt=""></div>
+					<div class="t-mine-collect-product-tb">
+						<div class="t-mine-collect-product-tit">新鲜水果新鲜水果新鲜水果新鲜水果新鲜水果新鲜水果新鲜水果新鲜水果新鲜水果</div>
+						<div class="t-mine-collect-product-tf">
+							<div class="t-mine-collect-product-tf-l">￥85.00</div>
+							<div class="t-mine-collect-product-tf-r cur">102</div>
+						</div>
+					</div>
+				</div>
+				<i class="icon ion-ios-arrow-right co-cccccc fs-22"></i>
+			</a> -->
+		</div>
+		
+		<div class="list" ng-if="productData.third_month.length>0">
+			<div class="item fs-12 pdt-10 pdb-10">最近三个月收藏</div>
+			<a class="item item-icon-right" ng-repeat="item in productData.third_month" href="#/index/find/art/{{item.id}}">
+				<div class="t-mine-collect-product">
+					<div class="t-mine-collect-product-pic"><img ng-src="{{item.upfile}}" alt=""></div>
+					<div class="t-mine-collect-product-tb">
+						<div class="t-mine-collect-product-tit">{{item.name}}</div>
+						<div class="t-mine-collect-product-tf">
+							<div class="t-mine-collect-product-tf-l">{{item.price | currency:"￥"}}</div>
+							<div class="t-mine-collect-product-tf-r cur">{{item.collection}}</div>
+						</div>
+					</div>
+				</div>
+				<i class="icon ion-ios-arrow-right co-cccccc fs-22"></i>
+			</a>
+		</div>
+		<div class="list" ng-if="productData.older_month.length>0">
+			<div class="item fs-12 pdt-10 pdb-10">往前三个月收藏</div>
+			<a class="item item-icon-right" ng-repeat="item in productData.older_month" href="#/index/find/art/{{item.id}}">
+				<div class="t-mine-collect-product">
+					<div class="t-mine-collect-product-pic"><img ng-src="{{item.upfile}}" alt=""></div>
+					<div class="t-mine-collect-product-tb">
+						<div class="t-mine-collect-product-tit">{{item.name}}</div>
+						<div class="t-mine-collect-product-tf">
+							<div class="t-mine-collect-product-tf-l">{{item.price | currency:"￥"}}</div>
+							<div class="t-mine-collect-product-tf-r cur">{{item.collection}}</div>
+						</div>
+					</div>
+				</div>
+				<i class="icon ion-ios-arrow-right co-cccccc fs-22"></i>
+			</a>
+		</div>
+
+
+		<div class="t-empty" ng-if="productData.older_month.length+productData.older_month.length+productData.one_month.length==0">
+		<img ng-src="img/maps/empty.png" alt="">
+		很抱歉，暂时没有相关内容
+		</div>
+
+
+
+
+	</ion-content>
+</ion-view>

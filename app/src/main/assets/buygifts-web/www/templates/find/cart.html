@@ -1,0 +1,69 @@
+<ion-view title="购物车" hide-tabs="true" hide-back-button="true">
+	<ion-nav-buttons side="left" back-or-home></ion-nav-buttons>
+	<ion-nav-buttons side="right">
+		<button class="button" ng-click="edit()">{{isEdit?"完成":"编辑"}}</button>
+	</ion-nav-buttons>
+	<ion-content class="bg-f4f4f4">
+
+	<div class="t-cart-none" ng-show="isCartDataNone">
+		<p>您的购物车空空如也</p>
+		<a ui-sref="index.find">前往首页</a>
+	</div>
+
+	<div class="t-cart-item t-checkbox" ng-repeat="item in cartData">
+		<div class="item item-checkbox checkbox-assertive">
+			<label class="checkbox"><input type="checkbox" ng-model="item.checked" ng-change="dealShopCheckbox(this)"></label>
+			<div class="t-cart-shop">
+				<div class="t-cart-shop-img"><img ng-src="{{item.seller_logo}}" alt="" /></div>
+				<div class="t-cart-shop-con">
+					<div class="t-cart-shop-con-tit">{{item.seller}}</div>
+				</div>
+			</div>
+		</div>
+		<div class="item item-checkbox checkbox-assertive" ng-repeat="proItem in item.product">
+			<label class="checkbox"><input type="checkbox" ng-model="proItem.checked" ng-change="dealProCheckbox(this)"></label>
+			<div class="t-cart-pro">
+				<a class="t-cart-pro-pic"><img ng-src="{{proItem.upfile}}" alt=""></a>
+				<div class="t-cart-pro-con">
+					<div class="t-cart-pro-tit">{{proItem.name}}</div>
+					<div class="t-cart-pro-des">{{proItem.style_name}}</div>
+					<div class="t-cart-pro-price">{{proItem.price | currency:"￥"}}</div>
+				</div>
+			</div>
+			<div class="t-cart-pro-count">
+				<div class="t-cart-pro-minus" ng-click="minus(this)"></div>
+				<div class="t-cart-pro-num">{{proItem.num}}</div>
+				<div class="t-cart-pro-add ion-plus" ng-click="add(this)"></div>
+			</div>
+		</div>
+	</div>
+	<div style="height:70px;"></div>
+
+	</ion-content>
+
+
+	<!-- 结算 有全选 -->
+	<div class="t-cart-jiesuan t-checkbox" ng-show="!isEdit">
+		<div class="item-checkbox checkbox-assertive">
+			<label class="checkbox"><input type="checkbox" ng-model="isSelectAllCartData" ng-change="selectAllCartData()"></label>
+			<div class="t-cart-jiesuan-con">
+				<div class="t-cart-jiesuan-tit">全选<em>合计：{{wantToBuyPrice | currency:"￥"}}</em></div>
+			</div>
+			<a class="t-cart-jiesuan-btn" ng-click="goToCheck()">去结算</a>
+		</div>
+	</div>
+	<!-- 结算 有全选 -->
+
+	<!-- 删除 -->
+	<div class="t-cart-del" ng-show="isEdit">
+		<div class="item-checkbox checkbox-assertive">
+			<label class="checkbox"><input type="checkbox" ng-model="isSelectAllCartData" ng-change="selectAllCartData()"></label>
+			<div class="t-cart-del-con">
+				<div class="t-cart-del-tit">全选</div>
+			</div>
+			<a class="t-cart-del-btn" ng-click="delCartData()">删除</a>
+		</div>
+	</div>
+	<!-- 删除 -->
+
+</ion-view>

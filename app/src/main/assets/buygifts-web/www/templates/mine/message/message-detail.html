@@ -1,0 +1,18 @@
+<ion-view view-title="消息详情" hide-tabs="true" hide-back-button="true">
+	<ion-nav-buttons side="left" back-or-home></ion-nav-buttons>
+	<ion-content overflow-scroll="true">
+		<div class="list">
+			<div class="item">
+				<div class="t-mine-msg">
+					<div class="t-mine-msg-con">
+						<div class="t-mine-msg-th">
+							<div class="t-mine-msg-th-l" ng-bind-html="messageData.title | trustHtml"></div>
+							<div class="t-mine-msg-th-r">{{messageData.push_time * 1000 | date:'yyyy-MM-dd HH:mm'}}</div>
+						</div>
+						<div class="t-mine-msg-des" ng-bind-html="messageData.content | trustHtml"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</ion-content>
+</ion-view>

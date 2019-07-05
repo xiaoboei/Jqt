@@ -1,0 +1,17 @@
+<ion-view view-title="使用优惠券" hide-tabs="true" hide-back-button="true">
+	<ion-nav-buttons side="left" back-or-home></ion-nav-buttons>
+	<ion-nav-buttons side="right">
+		<button class="button bon" ng-click="cancelUseCoupon()">取消使用</button>
+	</ion-nav-buttons>
+	<ion-content overflow-scroll="true">
+		<div class="t-mine-invite">
+			<form name="dataForm" novalidate>
+				<label class="item item-input">
+					<input type="text" name="code" placeholder="请输入您的优惠券" ng-model="dataObject.code" ng-minlength="16" ng-maxlength="16" required>
+				</label>
+				<button class="button button-assertive button-block" ng-click="useCoupon(dataForm)">提交</button>
+			</form>
+			
+		</div>
+	</ion-content>
+</ion-view>

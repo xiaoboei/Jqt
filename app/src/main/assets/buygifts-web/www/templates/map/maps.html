@@ -1,0 +1,769 @@
+<!doctype HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0">
+<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+<title> 地图场景图 </title>
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<meta name="renderer" content="webkit">
+<style>
+html , body {width: 100%;height: 100%;padding: 0;margin: 0;}
+</style>
+<script src="../../js/common.js"></script>
+<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=XUAfcxpaNnlgOvvIUYkai47Z"></script>
+<script src="http://api.map.baidu.com/library/MapWrapper/1.3/src/MapWrapper.min.js"></script>
+<script type="text/javascript">
+document.write('<link href="' + FILEPATH + 'lib/ionic/css/ionic.min.css" rel="stylesheet" \/>');
+document.write('<link href="' + FILEPATH + 'css/style.css" rel="stylesheet" \/>');
+document.write('<link href="' + FILEPATH + 'css/map.css?v=20160622" rel="stylesheet" \/>');
+document.write('<script src="' + FILEPATH + 'lib/zepto.min.js"><\/script>');
+document.write('<script src="' + FILEPATH + 'lib/vue.js"><\/script>');
+document.write('<script src="' + FILEPATH + 'lib/AreaRestriction.js"><\/script>');
+</script>
+</head>
+
+<body>
+<div class="popup-container popup-showing w-map-modal" v-show="modal.show">
+    <div class="popup">
+        <div class="popup-head">
+            <h3 class="popup-title ng-binding" >提示：</h3><!-- ngIf: subTitle -->
+        </div>
+        <div class="popup-body" style="text-align: center">
+            <span>{{modal.content}}</span>
+        </div>
+    </div>
+</div>
+<div class="w-map-content">
+    <div class="w-map-ctrl">
+        <a v-show="nshow" href="javascript:;" @click="changeMap" :class="{'active' : showMap}"><i class="icon-loop"></i></a>
+        <!--<a href="javascript:;" @click="toggle('store')" :class="{active: !showStore}"><i class="icon-home"></i></a>-->
+        <!--<a href="javascript:;" @click="toggle('view')" :class="{active : !showView}"><i class="icon-group"></i></a>-->
+        <a href="javascript:;" @click="toggle('all')" :class="{active: (!showStore && !showView)}"><i class="icon-home"></i></a>
+        <a target="_top" href="/{{path}}/#/index/find/talent-list/{{sceneId}}">
+            <span class="icon-talent-count">
+               <label>{{talent_count}}</label>
+            </span>
+            <i class="icon-group"></i>
+        </a>
+    </div>
+    <div id="map" class="w-map" v-show="mapType == 'custom'"></div>
+    <div id="dbmap" class="w-map" v-show="mapType == 'bdmap'"></div>
+</div>
+<script type="text/javascript">
+
+var app = new Vue({
+    el : 'html',
+    data : {
+        path: '',
+        sceneId : '',//场景id
+        sceneTypeId : '', //场景类型
+        mapType : 'custom',//初始地图类别
+        showStore: true,//默认显示店铺
+        showView: true,//默认显示景点,达人
+        showMap: false,//默认显示手绘地图
+        mapOverlays : [],//手绘地图覆盖物
+        bdmapOverlays : [],//百度地图覆盖物
+        currentPoint : {},//用户当前经纬度
+        modal: {
+            show: false,
+            content: ''
+        },
+        nshow:false, //切换地图按钮
+        isCurrentCity : true,//是否当前城市
+        maxViewScenic : {},//浏览数最多景点
+        lastViewScenic : {},//最后浏览景点
+    },
+    watch : {
+        // 监测是否显示全部店铺
+        showStore : function (value) {
+            var _this = this;
+            var mapOverlays = _this.mapOverlays;
+            var bdmapOverlays = _this.bdmapOverlays;
+            for (var i = 0 , len=mapOverlays.length; i < len ; i++) {
+                if (mapOverlays[i].item.dataType == 'store') {
+                    mapOverlays[i]._div.style.display = value ? 'block' : 'none';
+                }
+            }
+            for (var i = 0 , len=bdmapOverlays.length; i < len ; i++) {
+                if (bdmapOverlays[i].item.dataType == 'store') {
+                    bdmapOverlays[i]._div.style.display = value ? 'block' : 'none';
+                }
+            }
+        },
+        // 监测是否显示全部景点
+        showView : function (value) {
+            var _this = this;
+            var mapOverlays = _this.mapOverlays;
+            var bdmapOverlays = _this.bdmapOverlays;
+            for (var i = 0 , len=mapOverlays.length; i < len ; i++) {
+                if (mapOverlays[i].item.dataType != 'store') {
+                    mapOverlays[i]._div.style.display = value ? 'block' : 'none';
+                }
+            }
+            for (var i = 0 , len=bdmapOverlays.length; i < len ; i++) {
+                if (bdmapOverlays[i].item.dataType != 'store') {
+                    bdmapOverlays[i]._div.style.display = value ? 'block' : 'none';
+                }
+            }
+        },
+        // 监测地图类型
+        mapType: function(value) {
+            var _this = this;
+            _this.showStore = true;
+            _this.showView = true;
+            if (value == 'custom') {
+                _this.showMap = false;
+                if (_this.isMapInited == false) {
+                    _this.initMap();
+                }
+            } else {
+                _this.showMap = true;
+                _this.initMap();
+            }
+        },
+    },
+    methods: {
+        // 获取url参数
+        getQuery: function(key) {
+            var reg = new RegExp("(^|&)" + key + "=([^&]*)(&|$)", "i");
+            var r = window.location.search.substr(1).match(reg);
+            if (r != null) return (r[2]);
+            return null;
+        },
+        // 获取场景信息 初始化
+        getSceneView: function() {
+            var _this = this;
+            _this.sceneId = _this.getQuery('id');
+            var url = API.scene_view + '?id=' + _this.sceneId;
+            var lurl = API.store_region + '?id=' + _this.sceneId;
+            $.getJSON(url, function(data) {
+                if(data.RESPONSE_INFO){
+                    var scene = data.RESPONSE_INFO.scene;
+                    _this.map_dir = scene.img_dir;
+                    _this.center = {
+                        x: scene.width / 2 - document.body.clientWidth / 2,
+                        y: scene.height / 2 - document.body.clientHeight / 2
+                    }                    
+                    _this.range = {
+                        x: scene.width,
+                        y: scene.height
+                    }
+                    _this.getSceneData(function () {
+                        _this.initMap();
+                    });
+                    _this.sceneTypeId = scene.type;
+                }else{
+                    $.getJSON(lurl,function(data){
+                        var json = data.RESPONSE_INFO;
+                        _this.center = {
+                            x: 1080 / 2 - document.body.clientWidth / 2,
+                            y: 9800 / 2 - document.body.clientHeight / 2
+                        }
+                        _this.range = {
+                            x: 1080,
+                            y: 9800
+                        }
+                        
+                        _this.getSceneData(function () {
+                            _this.initMap();
+                        });
+                        _this.mapType = 'bdmap'
+                        _this.maxViewScenic = {
+                            lng : json.store.lng,
+                            lat : json.store.lat
+                        }
+                    })
+                }
+            })            
+        },
+        // 获取标记物数据
+        getSceneData : function (callback) {
+            var _this = this;
+            var urls = {
+                store : API.scene_store,
+                scenic : API.scene_scenic,
+                talent : API.scene_talent
+            }
+            var count = 0;
+            var sceneData = [];
+            var talent_count = 0;
+            for (var j in urls) {
+                (function (m) {
+                    var url = urls[m] + '?id=' + _this.sceneId;
+                    $.getJSON(url,function (data) {
+                        var d = data.RESPONSE_INFO[m];
+                        if(d.length!=0){
+                            _this.nshow = true;
+                        }
+                        //Allen add
+                        if (m=='talent') {
+                            talent_count = d.length;
+                            if (talent_count > 98)
+                                $('.icon-talent-count').addClass('more').html(talent_count + "+");
+                            else
+                                $('.icon-talent-count').html(talent_count);
+                        }
+                        // 默认取第一条为中心
+                        if (m == 'scenic') {
+                            _this.maxViewScenic = d[0];
+                        }
+                        for (var i = 0 , len=d.length; i < len ; i++) {
+                            d[i].dataType = m;
+                            sceneData.push(d[i]);
+                            // 取出浏览数最高景点
+                            if (m == 'scenic' && d[i].max_view == 1) {
+                                _this.maxViewScenic = d[i];
+                            }
+                        }
+                        count ++;
+                        if (count == 3) {
+                            _this.sceneData = sceneData;
+                            callback && callback();
+                        }
+                    })
+                })(j);
+            }            
+        },
+        // 初始化地图
+        initMap:function () {
+            var _this = this;
+
+            //Allen add
+            var link = window.location.href;
+            if (link.indexOf('www_android_new')!=-1) {
+                _this.path = 'www_android_new';
+            }else if(link.indexOf('www_ios')!=-1) {
+                _this.path = 'www_ios';
+            }else {
+                _this.path = 'www';
+            }
+
+            // 手绘地图
+            if (_this.mapType == 'custom') {
+                _this.initCustomMap();                
+            }
+
+            // 百度地图
+            if (_this.mapType == 'bdmap') {
+                _this.initBdMap();
+            }
+
+        },
+        // 构造手绘地图
+        initCustomMap:function () {
+            var _this = this;
+            _this.isMapInited = true;
+
+            // 构造自定义手绘地图
+            var tileLayer = new BMap.TileLayer();
+            tileLayer.getTilesUrl = function(tileCoord, zoom) {
+                var x = tileCoord.x;
+                var y = tileCoord.y;
+                zoom = zoom - 10;
+                return _this.map_dir + zoom + '/tile' + x + '_' + y + '.png';               
+            }
+            var MyMap = new BMap.MapType('MyMap', tileLayer, {
+                minZoom: 11,
+                maxZoom: 13
+            });
+            // 构造地图
+            var map = new BMap.Map('map', {
+                mapType: MyMap,
+            });
+            map.centerAndZoom(new BMap.Point(0, 0), 13);
+            map.disableDoubleClickZoom();
+            /*var beginpoint =  new BMap.Point(-0.39238, 0.291586);            
+            setTimeout(function () {
+                map.panTo(beginpoint);
+            },1000);*/                    
+            
+
+            // 构造自定义控件
+            function ZoomControl() {
+                this.defaultAnchor = BMAP_ANCHOR_TOP_LEFT;
+                this.defaultOffset = new BMap.Size(10, 10);
+            }
+
+            ZoomControl.prototype = new BMap.Control();
+
+            ZoomControl.prototype.initialize = function (map) {
+                /*if(_this.sceneTypeId == 0){
+                    // 创建一个DOM元素
+                     var div = document.createElement("div");
+                     var inner = '';
+                    inner+='<div class="w-map-control">';
+                    inner+='<a href="javascript:;" class="in disabled" rel="in"></a>';
+                    inner+='<a href="javascript:;" class="out" rel="out"></a>';
+                    inner+='</div>';
+                    div.innerHTML = inner;
+                    div.onclick = function(e) {
+                        var target = e.target;
+                        var zoom = map.getZoom();                
+                        if (target.rel == 'in') {
+                            if (zoom == 13) {
+                                _this.showModal('已经放大到最高级别');
+                                return;
+                            }
+                            map.zoomIn();
+                        }else {
+                            if (zoom == 11) {
+                                _this.showModal('已经缩小到最小级别');
+                                return;
+                            }
+                            map.zoomOut();
+                        }
+                        var zoom = map.getZoom();
+                        $('.in').toggleClass('disabled',zoom == 13);
+                        $('.out').toggleClass('disabled',zoom==11);
+                    }                
+                     // 添加DOM元素到地图中
+                     map.getContainer().appendChild(div);
+                     // 将DOM元素返回
+                     return div;
+                 }*/
+
+            }
+
+            // 添加自定义控件
+            map.addControl(new ZoomControl());
+
+            // 限制地图范围
+            var startPoint = {
+                x : 0 - _this.center.x + 0,
+                y : _this.range.y - _this.center.y - 0
+            }
+
+            var endPoint = {
+                x : _this.range.x - _this.center.x - 0,
+                y : 0 - _this.center.y + 0
+            }
+            // startPoint = map.overlayPixelToPoint(startPoint);            
+            // endPoint = map.overlayPixelToPoint(endPoint);
+            // map.enableScrollWheelZoom();
+            // map.addEventListener('click', function (e) {
+            //      alert(e.point.lng + ', ' + e.point.lat);
+            // });
+            // console.log(startPoint.lng, startPoint.lat, endPoint.lng, endPoint.lat);
+            // console.log(startPoint.x, startPoint.y, endPoint.x, endPoint.y);
+            // var b = new BMap.Bounds(new BMap.Point(startPoint.lng, startPoint.lat), new BMap.Point(endPoint.lng, endPoint.lat));
+            // var b = new BMap.Bounds(new BMap.Point(startPoint.x, startPoint.y), new BMap.Point(endPoint.x, endPoint.y));
+            // var bs = map.getBounds();   //获取可视区域
+            // console.log('矩形区域是否为空：' + bs.isEmpty());
+            // var bssw = bs.getSouthWest();   //可视区域左下角
+            // var bsne = bs.getNorthEast();   //可视区域右上角
+            // console.log("当前地图可视范围是：" + bssw.lng + "," + bssw.lat + "到" + bsne.lng + "," + bsne.lat);
+            
+            startPoint = map.overlayPixelToPoint(startPoint);            
+            endPoint = map.overlayPixelToPoint(endPoint);
+
+            var b = new BMap.Bounds(startPoint,endPoint);
+
+            try {
+                BMapLib.AreaRestriction.setBounds(map, b);
+            }catch(e){
+                console.log(e);
+            }
+
+
+            _this.initOverlay(map,function (overlays) {
+                _this.mapOverlays = overlays;                
+                _this.checkInScreen(map,overlays);                
+            });
+
+            _this.initEvent(map,function (screenRange) {
+                _this.checkInScreen(map,_this.mapOverlays,screenRange);
+            })
+
+            if(_this.sceneTypeId == 1){
+                map.setZoom(11);
+            }            
+            map.disablePinchToZoom();
+        },
+        // 构造百度地图
+        initBdMap:function () {
+            var _this = this;
+            _this.isBdMapInited = true;
+            var point = '';
+            // 当前城市
+            if (_this.isCurrentCity) {
+                point = JSON.parse(localStorage['w-point']);
+            }else {
+                if (_this.lastViewScenic.lng) {
+                    point = {
+                        lng : _this.lastViewScenic.lng,
+                        lat : _this.lastViewScenic.lat
+                    }                    
+                }else {
+                    point = {
+                        lng : _this.maxViewScenic.lng,
+                        lat : _this.maxViewScenic.lat
+                    }
+                }
+            }
+
+            var map = new BMap.Map("dbmap");
+            map.centerAndZoom(new BMap.Point(point.lng, point.lat), 16);
+            // 添加控件
+            map.addControl(new BMap.NavigationControl({
+                anchor: BMAP_ANCHOR_TOP_LEFT
+            }));
+
+            _this.initOverlay(map,function (overlays) {
+                _this.bdmapOverlays = overlays;
+                _this.checkInScreen(map,overlays);
+            });
+
+            _this.initEvent(map,function (screenRange) {
+                _this.checkInScreen(map,_this.bdmapOverlays,screenRange);
+            })
+
+        },
+        // 初始化事件
+        initEvent : function (maps,callback) {
+            var _this = this;
+            var isClick = false;
+            var isDrag = false;
+            var start = {};
+
+            var screenRange = {
+                start: {
+                    x: 0,
+                    y: 0
+                },                
+                end: {
+                    x: document.body.clientWidth,
+                    y: document.body.clientHeight
+                }
+            }            
+
+            // maps.addEventListener('click',function (e) {
+            //     return;
+            //     var $target = $(e.domEvent.target);
+            //     var $link = $target.closest('.link');
+            //     var link = $link.attr('href');
+            //     if (link) {
+            //         parent.location.href = link;
+            //     }
+
+            //     var $toggle = $target.closest('.toggleContent');
+            //     if ($toggle.length) {
+            //         var $items = $toggle.closest('.items');
+            //         $items.toggleClass('active').siblings('.items').removeClass('active');
+            //     }
+            // },false);
+
+            // 拖动结束,判断标记物是否在屏幕内显示
+            maps.addEventListener('dragend',function(e){
+                callback && callback();
+                // console.log("dragend");
+            });
+
+            maps.addEventListener('touchstart', function(e) {
+                var target = e.domEvent.target;
+                target.click();
+                // console.log('touchstart');
+
+                return;
+                var $target = $(e.domEvent.target);
+                var $link = $target.closest('.link');
+                var link = $link.attr('href');
+                if (link) {
+                    parent.location.href = link;
+                }
+
+                var $toggle = $target.closest('.toggleContent');
+                if ($toggle.length) {
+                    var $items = $toggle.closest('.items');
+                    $items.toggleClass('active').siblings('.items').removeClass('active');
+                }
+
+                isDrag = false;
+                isClick = true;
+                start = {
+                    x: e.pixel.x,
+                    y: e.pixel.y
+                }
+            }, false);
+
+            maps.addEventListener('touchmove',function(e){
+                isDrag = true;
+                isClick = false;
+            },false);
+
+            maps.addEventListener('touchend', function(e) {
+                return;
+                if (isClick) {
+                    var $target = $(e.domEvent.target);
+                    var $link = $target.closest('.link');
+                    var link = $link.attr('href');
+                    if (link) {
+                        parent.location.href = link;
+                    }
+
+                    var $toggle = $target.closest('.toggleContent');
+                    if ($toggle.length) {
+                        var $items = $toggle.closest('.items');
+                        $items.toggleClass('active').siblings('.items').removeClass('active');
+                    }
+
+                    isClick = false;
+                }
+
+            }, false);
+        },
+        // 判断标记物是否在屏幕内显示
+        checkInScreen: function(map,overlays) {
+            var _this = this;
+            var bounds = map.getBounds();
+
+//            for (var i = 0 , len=overlays.length; i < len ; i++) {
+//                (function (m) {
+//                    var p = overlays[m].point;
+//                    var isContain = bounds.ul.lat > p.lat && p.lat > bounds.Ll.lat && bounds.ul.lng > p.lng && p.lng > bounds.Ll.lng;
+//                    overlays[m]._div.style.display = isContain ? 'block' : 'none';
+//                    overlays[m]._div.className = isContain ? 'items block' : 'items';
+//                    // overlays[m]._div.style.display = bounds.containsPoint(p) ? 'block' : 'none';
+//                })(i);
+//            }
+
+            overlays.forEach(function (overlay) {
+                var type = overlay.item.dataType;
+                var p = overlay.point;
+                var isContain = bounds.ul.lat > p.lat && p.lat > bounds.Ll.lat && bounds.ul.lng > p.lng && p.lng > bounds.Ll.lng;
+
+                //overlay._div.style.display = isContain ? 'block' : 'none';
+                overlay._div.className = isContain ? 'items block' : 'items';
+                if (_this.showStore == false && type == 'store') {
+                    overlay._div.style.display = 'none';
+
+                }
+
+                if (_this.showView == false && type != 'store') {
+                    overlay._div.style.display = 'none';
+
+                }
+            })
+
+            return;
+
+            screenRange = screenRange || {
+                start: {
+                    x: 0,
+                    y: 0
+                },
+                end: {
+                    x: document.body.clientWidth,
+                    y: document.body.clientHeight
+                }
+            }
+            for (var i = 0, len = overlays.length; i < len; i++) {
+                var p = overlays[i].pixel;
+                var isContain = (screenRange.start.x - 150) < p.x && p.x < (screenRange.end.x + 150) && (screenRange.start.y - 150) < p.y && p.y < (screenRange.end.y + 150);
+                overlays[i]._div.style.display = isContain ? 'block' : 'none';
+            }
+        },
+        // 自定义覆盖物
+        initOverlay : function (maps,callback) {
+            var _this = this;
+            var sceneData = _this.sceneData;
+            function Overlay(item) {
+                this.item = item;
+            }
+
+            Overlay.prototype = new BMap.Overlay();
+            Overlay.prototype.initialize = function (map) {
+                this._map = map;
+                var item = this.item;
+                var div = document.createElement('div');
+                div.className = 'items';
+                var inner = '';
+
+                if (item.dataType == 'store') {
+                    var hasComment = item.comment;
+                    inner += '<div class="items-avatar animated flash">';
+                    inner += '<a href="../../index.html#/index/find/shop/' + item.busines_id + '" target="_top" class="toggleContent"><span></span></a>';
+                    inner += '</div>' +
+                    '<div class="items-content items-content-scenic block items-store" style="margin:0; transform:scale(1) translate3d(-50%,0,0);-webkit-transform:scale(1) translate3d(-50%,0,0)">' +
+                        '<a href="../../index.html#/index/find/shop/' + item.busines_id + '" target="_top" class="link">' +
+                        '<div class="bd">' +
+                        '<img src="' + item.upfile + '" alt="" class="img">'+
+                        '<p class="name">' + item.name + 
+                        '&nbsp;&nbsp;&nbsp;<i class="icon ion-heart"></i>&nbsp;' + item.count + '</p>' +
+                        '</div>' +
+                        '</a>' +
+                        '</div>' +
+                        '<div class="items-arr-scenic block" style="top:-34px"></div>';
+                    /*inner += '<div class="items-content items-content-store ' + (hasComment ? '' : 'items-content-empty') + '">';
+                    inner += '<a href="../../index.html#/index/find/shop/' + item.busines_id + '" target="_top" class="link">';
+                    inner += '<div class="hd">';
+                    inner += '<span class="sub"><i class="icon ion-heart"></i>' + item.count + '</span>';
+                    inner += '<span class="mark">' + item.name + '</span>';
+                    inner += '</div>';
+                    inner += '</a>';
+                    if (hasComment) {
+                        inner += '<a href="../../index.html#/index/find/art/' + item.comment.product_id + '" target="_top" class="link">';
+                        inner += '<div class="bd"><img src="' + item.comment.upfile + '" class="pic"/>' + (item.comment.content) + '</div>';
+                        inner += '</a>';
+                    }
+                    inner += '</div>';
+                    inner +='<div class="items-arr"></div>';*/
+                }
+
+                if (item.dataType == 'scenic') {
+                    inner = '<div class="items-doc">' +
+                        /*'<span class="r animated scale"></span>'+*/
+                        '<a href="javascript:;" class="toggleContent"></a>' +
+                        '</div>' +
+                        '<div class="act"><div class="items-content items-content-scenic">' +
+                        '<a href="../../index.html#/index/map/scenic/' + item.busines_id + '" target="_top" class="link">' +
+                        '<div class="bd">' +
+                        '<img src="' + item.upfile + '" alt="" class="img">'+
+                        '<p class="name">' + item.name + '</p>' +
+                        '<p><i class="icon ion-heart"></i>' + item.count + '</p>' +
+                        '</div>' +
+                        '</a>' +
+                        '</div>' +
+                        '<div class="items-arr-scenic"></div></div>';
+                }
+
+                if (item.dataType == 'talent') {
+                    inner = '<div class="items-avatar animated flash talents">' +
+                        '<a href="../../index.html#/index/find/talent/' + item.busines_id + '"  target="_top"  class="toggleContent"><img src="' + item.upfile + '" alt=""></a>' +
+                        '</div>' +
+                        '<div class="items-content items-sm items-content-talent block">' +
+                        '<a href="../../index.html#/index/find/talent/' + item.busines_id + '" target="_top" class="link">' +
+                        '<div class="bd">' +
+                        '<p class="name"><span class="sub">' + item.count + '</span><span class="sub"><i class="icon ion-heart">&nbsp;</i></span><span class="mark">' + item.name + '</span></p>' +
+                        '</div>' +
+                        '</a>'+
+                        '</div>' +
+                        '<div class="items-arr-talent block"></div>';
+                }
+
+                div.innerHTML = inner;
+                map.getPanes().markerPane.appendChild(div);
+                this._div = div;
+
+                // 手绘地图
+                if (_this.mapType == 'custom') {
+                    this.point = this._map.overlayPixelToPoint({
+                        x: item.scene_x - _this.center.x,
+                        y: item.scene_y - _this.center.y
+                    });                                 
+                }
+                // 百度地图
+                if (_this.mapType == 'bdmap') {
+                    this.point = {
+                        lat : parseFloat(item.lat),
+                        lng : parseFloat(item.lng)
+                    }
+                }
+
+                return div;
+
+            }
+
+            Overlay.prototype.draw = function() {
+                var position = this._map.pointToOverlayPixel(this.point);                
+                this.pixel = position;
+                this._div.style.left = position.x + 'px';
+                this._div.style.top = position.y + 'px';
+            }
+
+            Overlay.prototype.addEventListener = function (event,fn) {
+                var self = this;
+                self._div['on'+event] = function (e) {
+                    fn.call(self,e);
+                }
+            }
+
+            function clickEvent(e) {
+                var self = this;
+                console.log("a");
+                var $target = $(e.target);
+                var $link = $target.closest('.link');
+                var link = $link.attr('href');
+                if (link) {
+                    if (self.item.dataType == 'scenic') {
+                        _this.lastViewScenic = self.item;
+                    }
+                    $link.click();
+                    // parent.location.href = link;
+                }
+
+                var $toggle = $target.closest('.toggleContent');
+                if ($toggle.length) {
+                    var $items = $toggle.closest('.items');   
+                    $items.siblings(".items").find(".act").removeClass("active");                 
+                    $items.find(".act").toggleClass('active');
+                }
+            }
+
+            var overlays = [];
+            for (var i = 0 , len=sceneData.length; i < len ; i++) {
+                (function (m) {
+                    var overlay = new Overlay(sceneData[m]);
+                    overlays.push(overlay);
+                    maps.addOverlay(overlay);
+                    overlay.addEventListener('click',clickEvent);
+                })(i);
+            }
+
+           callback && callback(overlays);
+
+        },
+        showModal: function(content) {
+            var _this = this;
+            _this.modal.content = content;
+            _this.modal.show = true;
+            setTimeout(function() {
+                _this.modal.show = false;
+            }, 2000);
+        },
+        toggle: function(type) {
+            var _this = this;
+            if (type == 'store') {
+                _this.showStore = !_this.showStore;
+                _this.showView = true;
+            }
+            if (type == 'view') {
+                _this.showView = !_this.showView;
+                _this.showStore = true;
+            }
+            //Allen add
+            if (type == 'all') {
+                _this.showStore = !_this.showStore;
+                _this.showView = !_this.showView;
+            }
+        },
+        // 获取用户当前经纬度
+        getCurrentPosition: function(callback) {            
+            var _this = this;
+            var geolocation = new BMap.Geolocation();
+            geolocation.getCurrentPosition(function(r) {
+                if (this.getStatus() == BMAP_STATUS_SUCCESS) {
+                    _this.currentPoint = r.point;
+                    callback && callback(r.point);                    
+                } else {
+                    console.log('failed' + this.getStatus());
+                }
+            }, {
+                enableHighAccuracy: true
+            })
+        },
+        changeMap : function () {
+            this.mapType = this.mapType == 'custom' ? 'bdmap' : 'custom';
+        },
+    },
+    ready : function () {
+        this.isCurrentCity = localStorage['w-localCity'] == localStorage['w-cityName'];
+        this.getSceneView();
+        // this.getCurrentPosition()
+    }
+})
+</script>
+</body>
+</html>

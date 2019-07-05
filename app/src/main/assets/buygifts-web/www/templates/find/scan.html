@@ -1,0 +1,13 @@
+<ion-view view-title="提示" hide-tabs="true" hide-back-button="true">
+	<ion-nav-buttons side="left" back-or-home></ion-nav-buttons>
+	<ion-content overflow-scroll="true">
+		<div class="t-scan" ng-if="scanText">
+			<div class="t-scan-th">已扫描到以下内容</div>
+			<div class="t-scan-tb">{{scanText}}</div>
+			<div class="t-scan-tf">扫描所得内容并非途礼游所提供，请谨慎使用</div>
+		</div>
+		<div class="t-scan" ng-if="!scanText">
+			<div class="t-scan-th">暂无扫描内容</div>
+		</div>
+	</ion-content>
+</ion-view>

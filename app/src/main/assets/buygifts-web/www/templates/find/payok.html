@@ -1,0 +1,17 @@
+<ion-view view-title="收银台" hide-tabs="true" hide-back-button="true">
+	<ion-nav-buttons side="left" back-or-home></ion-nav-buttons>
+	<ion-content overflow-scroll="true">
+		<div class="t-pay-ok">
+			<div class="t-pay-ok-icon"></div>
+			<div class="t-pay-ok-con">
+				<div class="t-pay-ok--tit">订单支付成功</div>
+				<div class="t-pay-ok-des">订单号：{{orderData.number}}</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col"><a href="#/index/mine/order/" class="button button-outline button-assertive button-block">查看订单</a></div>
+			<div class="col"><a href="#/index/find" class="button button-outline button-assertive button-block">继续购物</a></div>
+		</div>
+
+	</ion-content>
+</ion-view>

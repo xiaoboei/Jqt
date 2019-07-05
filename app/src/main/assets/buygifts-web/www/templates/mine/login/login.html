@@ -1,0 +1,36 @@
+<ion-view view-title="登录" hide-tabs="true" hide-back-button="true">
+<!-- hide-nav-bar="true" -->
+	<ion-nav-buttons side="left" back-or-home></ion-nav-buttons>
+	<ion-content class="t-login-bg" overflow-scroll="true">
+	<!-- <button class="button icon ion-ios-arrow-back button-clear t-back-button" ng-click="back()"></button> -->
+		<div class="list t-login">
+			<div class="t-login-img2"><img src="img/logo.png" alt="" /></div>
+            <div class="t-login-text">
+                <h1>Hi 您来了</h1>
+                <p>欢迎来到粤桂黔！<br/>晒出旅行中的发现，分享好物的故事</p>
+            </div>
+			<form name="dataForm" novalidate>
+				<label class="item item-input">
+					<input type="tel" name="username" placeholder="请输入手机号码" ng-model="dataObject.username" ng-pattern="/^[0-9]{11}$/" required>
+				</label>
+				<label class="item item-input">
+					<input type="password" name="password" placeholder="请输入密码 6到16位" ng-model="dataObject.password" ng-minlength="6" ng-maxlength="16" required>
+				</label>
+				<div class="t-login-line">
+                    <a ui-sref="index.mine-register" class="t-login-line-l positive">立即注册</a>
+                    <a ui-sref="index.mine-forgetPassword" class="t-login-line-r">忘记密码</a>
+				</div>
+				<input type="submit" value="登录" ng-click="login(dataForm)" class="button button-outline button-block t-login-button"/>
+			</form>
+		</div>
+		 <!-- ng-if="isShowWechatLogin" -->
+		<div class="t-login-other">
+			<div class="t-login-other-tit">选择其他方式</div>
+			<div class="t-login-other-con">
+				<a class="t-login-other-wechat" ng-click="wechatLogin()"></a>
+				<!-- <a class="t-login-other-sina"></a> -->
+				<!-- <a class="t-login-other-qq"></a> -->
+			</div>
+		</div>
+	</ion-content>
+</ion-view>

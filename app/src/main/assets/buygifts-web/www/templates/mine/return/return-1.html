@@ -1,0 +1,41 @@
+<ion-view view-title="申请售后服务" hide-tabs="true" hide-back-button="true">
+	<ion-nav-buttons side="left" back-or-home></ion-nav-buttons>
+	<ion-content class="bg-f4f4f4" overflow-scroll="true">
+		<a class="t-mine-order-tb" href="#/index/find/art/{{wantToReturnData.product_json.product_id}}" style="margin-bottom:15px;">
+			<div class="t-mine-order-tb-img"><img ng-src="{{wantToReturnData.product_json.upfile}}" alt="" /></div>
+			<div class="t-mine-order-tb-con">
+				<div class="t-mine-order-tb-con-tit">{{wantToReturnData.product_json.name}}</div>
+				<div class="t-mine-order-tb-con-num">{{wantToReturnData.product_json.price | currency:"￥"}}&emsp;数量 :{{wantToReturnData.product_json.num}}</div>
+			</div>
+		</a>
+		<div class="t-return-item">
+			<div class="t-return-item-tit">服务类型</div>
+			<div class="t-return-item-con">
+				<div ng-class="{true:'t-return-item-btn t-return-item-btn-cur',false:'t-return-item-btn'}[wantToSubmitReturnData.return_type==2]" ng-click="selectReturnType(2)">换货</div>
+				<div ng-class="{true:'t-return-item-btn t-return-item-btn-cur',false:'t-return-item-btn'}[wantToSubmitReturnData.return_type==1]" ng-click="selectReturnType(1)">退货</div>
+			</div>
+		</div>
+		<div class="t-return-item">
+			<div class="t-return-item-tit">申请数量</div>
+			<div class="t-return-item-con">
+				<div class="t-cart-pro-minus" ng-click="minus()"></div>
+				<div class="t-cart-pro-num" ng-bind="wantToSubmitReturnData.num"></div>
+				<div class="t-cart-pro-add ion-plus" ng-click="add()"></div>
+			</div>
+			<div class="t-return-item-tip">您最多可提交数量为{{wantToReturnData.product_json.num}}个</div>
+		</div>
+
+		<div class="t-return-item">
+			<div class="t-return-item-tit">问题描述</div>
+			<div class="t-return-item-con"><textarea class="t-return-item-textarea" name="" ng-model="wantToSubmitReturnData.content" rows="" cols="" placeholder="请您在此详细描述问题"></textarea></div>
+		</div>
+		<div class="t-return-item">
+			<div class="t-return-item-tit">上传图片</div>
+			<div class="upload-pic" id="Jpic">
+				<div class="upload-pic-item-input" id="JuploadPic"><input type="file" name="" /></div>
+			</div>
+			<div class="t-return-item-tip">最多可上传3张，每张不超过5M，支持JPG、BMG、PNG</div>
+		</div>
+		<div class="ma-10 pdb-10"><button class="button button-assertive button-block" ng-click="next()">下一步</button></div>
+	</ion-content>
+</ion-view>

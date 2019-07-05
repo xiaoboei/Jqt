@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+<title>粤桂黔</title>
+<meta content="telephone=no,email=no" name="format-detection" />
+<meta name="x5-fullscreen" content="true" />
+<meta name="x5-page-mode" content="app" />
+<script src="js/common.js"></script>
+<script type="text/javascript">
+document.write('<link href="' + FILEPATH + 'lib/ionic/css/ionic.min.css" rel="stylesheet"\/>');
+document.write('<link href="' + FILEPATH + 'css/style.css" rel="stylesheet"\/>');
+document.write('<link href="' + FILEPATH + 'css/map.css" rel="stylesheet"\/>');
+document.write('<script src="http://api.map.baidu.com/api?v=2.0&ak=XUAfcxpaNnlgOvvIUYkai47Z"><\/script>');
+document.write('<script src="' + FILEPATH + 'lib/ionic/js/ionic.bundle.min.js"><\/script>');
+document.write('<script src="' + FILEPATH + 'lib/ngCordova/dist/ng-cordova.js"><\/script>');
+
+// 安卓和ios app 才加载cordova插件
+if (link.indexOf('m.tuliyou.com') != -1 || link.indexOf('buygifts.3ncto.cn') != -1) {
+	if (link.indexOf('/www_ios/') != -1 || link.indexOf('/www_android_new/') != -1) {
+        document.write('<script src="' + FILEPATH + 'cordova.js"><\/script>');
+	};
+}
+document.write('<script src="' + FILEPATH + 'js/app.js"><\/script>');
+document.write('<script src="' + FILEPATH + 'js/controllers.js"><\/script>');
+document.write('<script src="' + FILEPATH + 'js/controllers-map.js"><\/script>');
+document.write('<script src="' + FILEPATH + 'js/controllers-find.js"><\/script>');
+document.write('<script src="' + FILEPATH + 'js/controllers-mine.js"><\/script>');
+document.write('<script src="' + FILEPATH + 'js/services.js"><\/script>');
+document.write('<script src="' + FILEPATH + 'js/directive.js"><\/script>');
+document.write('<script src="' + FILEPATH + 'lib/jquery-2.2.1.min.js"><\/script>');
+// document.write('<script src="' + FILEPATH + 'lib/fastclick.js"><\/script>');
+// document.write('<script src="' + FILEPATH + 'js/scene.js"><\/script>');
+
+  var ionic = document.createElement('link');
+  ionic.setAttribute('rel', 'stylesheet');
+  ionic.setAttribute('src',  FILEPATH + 'lib/ionic/css/ionic.min.css');
+  document.head.appendChild(ionic);
+  var stylecss = document.createElement('link');
+  stylecss.setAttribute('rel', 'stylesheet');
+  stylecss.setAttribute('href', FILEPATH + 'css/style.css');
+  document.head.appendChild(stylecss);
+  var mapcss = document.createElement('link');
+  mapcss.setAttribute('rel', 'stylesheet');
+  mapcss.setAttribute('href', FILEPATH + 'css/scene.css');
+  document.head.appendChild(mapcss);
+  // var scenejs = document.createElement('script');
+  // scenejs.setAttribute('src', FILEPATH + 'js/scene.js');
+  // document.head.appendChild(scenejs);
+</script>
+
+
+</head>
+<body ng-app="starter">
+<ion-nav-bar class="bar-stable">
+<ion-nav-back-button>
+</ion-nav-back-button>
+</ion-nav-bar>
+<ion-nav-view scroll="false"></ion-nav-view>
+</body>
+
+<script>
+
+// var fastclickjs = document.createElement('script');
+// fastclickjs.setAttribute('src', FILEPATH + 'lib/fastclick.js');
+// document.body.appendChild(fastclickjs);
+// setTimeout(function () {
+//   FastClick.attach(document.body);
+// }, 1000);
+
+</script>
+</html>

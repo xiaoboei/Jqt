@@ -1,0 +1,105 @@
+<ion-view view-title="景点" hide-tabs="true" hide-back-button="true">
+<ion-nav-buttons side="left" back-or-home></ion-nav-buttons>
+<ion-nav-title>{{title}}</ion-nav-title>
+<ion-nav-buttons side="right"><span class="ctrl"><a href="javascript:;" ng-click="showShare(1)"><i class="ion-share"></i></a><a href="javascript:;" ng-click="focusScenic()"><i ng-class="{'ion-android-favorite-outline' : is_fans == '0' , 'ion-android-favorite' : is_fans == '1'}"></i></a></span></ion-nav-buttons>
+<ion-content>
+<div class="w-scenic">
+<!--     <div class="w-scenic-preview">
+        <img ng-src="{{storeData.scenic.upfile[0]}}" alt="">
+    </div> -->
+
+    <ion-slide-box does-continue="true" class="t-art-bigPic-wrap">
+        <ion-slide ng-repeat="item in storeData.scenic.upfile">
+            <a class="t-art-bigPic" style="background-image:url({{item}});padding-top:50%;"></a>
+        </ion-slide>
+    </ion-slide-box>
+
+    <div class="w-scenic-title">
+        <!-- <a href="javascript:;" class="ctrl"><i ng-class="{'ion-chevron-up' : showDesc , 'ion-chevron-down' : !showDesc}"></i></a> -->
+        <span>介绍</span>
+    </div>
+
+    <div class="w-scenic-desc ture">
+    <div class="inner" ng-bind-html="storeData.scenic.content | trustHtml"></div>
+    </div>
+
+    <div class="w-scenic-subtitle" ng-if="storeData.product.length">
+        <span>纪念品</span>
+    </div>
+
+    <div class="w-scenic-souvenir" ng-if="storeData.product.length">
+        <ul class="">
+        <li ng-repeat="item in storeData.product">
+            <a href="#/index/find/art/{{item.id}}">
+            <img ng-src="{{item.upfile}}" alt="">
+            <p class="title">{{item.name}}</p>
+            </a>
+            <p class="price"><a href="javascript:;" class="sub" ng-click="focus(item)"><i ng-class="{'ion-android-favorite-outline' : item.is_fans == '0' , 'ion-android-favorite' : item.is_fans == '1'}"></i>{{item.collection}}</a>{{item.price | currency:"￥"}}</p>
+        </li>
+        </ul>
+    </div>    
+
+    <div class="w-scenic-other">
+        <p class="title">大家还喜欢</p>
+        <ul class="">
+        <li ng-repeat="item in likeData.scenic" ng-if="item.id != id && $index < 5"><a href="#/index/map/scenic/{{item.id}}" ><span style="background-image: url({{item.logo}});" class="avatar"></span></a></li>
+        </ul>
+    </div>
+
+    <div class="w-scenic-comment">
+        <p class="title">评论 {{comments.length}}</p>
+        <div class="comment" ng-repeat="item in comments">
+            <img ng-src="{{item.upfile}}" alt="" class="avatar">
+            <p class="name">{{item.nickname?item.nickname:telHide(item.username)}}</p>
+            <p class="desc"><span class="level">LV{{item.user_rank_id}}</span></p>
+            <p class="content">{{item.content}} </p>
+
+            <div class="ctrl">
+                <!-- <p><a href="#/index/map/scenic/comment/{{id}}/name/{{item.nickname}}" class="btn">回复</a></p> -->
+                <p class="date">{{item.create_time * 1000 | date:'yyyy-MM-dd HH:mm'}}</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="w-scenic-comment-ctrl"></div>
+
+</div>
+
+</ion-content>
+
+<div class="w-scenic-comment-ctrl-fix">
+ <!-- href="#/index/map/scenic/comment/{{id}}" -->
+    <span class="text-wrap"><a class="text" ng-click="gotocmt()">写评论</a></span>
+    
+</div>
+
+
+    <!-- 分享底部条 S -->
+    <div class="t-share-bg" ng-show="isshowShare" ng-click="showShare(0)"></div>
+    <section class="t-share-plate" ng-show="isshowShare">
+        <div class="t-share-plate-tit">分享到：
+        <i class="ion-close-round" ng-click="showShare(0)"></i>
+        </div>
+        <div class="t-share-plate-con">
+            <a class="t-share-plate-item" ng-click="wx_share('WXfriend', title, storeData.scenic.upfile[0])" >
+                <div class="t-share-plate-item-pic"><img src="img/shareWXfriend.png" alt="" /></div>
+                <div class="t-share-plate-item-tit">微信好友</div>
+            </a>
+            <a class="t-share-plate-item" ng-click="wx_share('WXzone', title, storeData.scenic.upfile[0])">
+                <div class="t-share-plate-item-pic"><img src="img/shareWXzone.png" alt="" /></div>
+                <div class="t-share-plate-item-tit">朋友圈</div>
+            </a>
+        </div>
+<!--        <a class="t-share-plate-item" ng-click="shareQQfriend()">
+            <div class="t-share-plate-item-pic"><img src="img/shareQQfriend.png" alt="" /></div>
+            <div class="t-share-plate-item-tit">QQ好友</div>
+        </a>
+        <a class="t-share-plate-item" ng-click="shareQQzone()">
+            <div class="t-share-plate-item-pic"><img src="img/shareQQzone.png" alt="" /></div>
+            <div class="t-share-plate-item-tit">QQ空间</div>
+        </a> -->
+    </section>
+    <!-- 分享底部条 E -->
+
+
+</ion-view>

@@ -1,0 +1,43 @@
+<ion-view view-title="评价晒单" hide-tabs="true" hide-back-button="true">
+	<ion-nav-buttons side="left" back-or-home></ion-nav-buttons>
+	<ion-content class="bg-f4f4f4" overflow-scroll="true">
+
+<!-- 			<div class="t-mine-cmt">
+				<div class="t-mine-cmt-tb">
+					<div class="t-mine-cmt-tb-img"><img ng-src="http://temp.im/100x100" alt="" /></div>
+					<div class="t-mine-cmt-tb-con">
+						<div class="t-mine-cmt-tb-con-tit">评价</div>
+						<div class="t-mine-cmt-tb-con-star"><i class="icon ion-ios-star"></i><i class="icon ion-ios-star"></i><i class="icon ion-ios-star"></i></div>
+					</div>
+				</div>
+				<div class="t-mine-cmt-tf">这件商品帧的很好</div>
+			</div>
+			<div class="t-mine-cmt">
+				<div class="t-mine-cmt-tb">
+					<div class="t-mine-cmt-tb-img"><img ng-src="http://temp.im/100x100" alt="" /></div>
+					<div class="t-mine-cmt-tb-con">
+						<div class="t-mine-cmt-tb-con-tit">评价</div>
+						<div class="t-mine-cmt-tb-con-star"><i ng-class="{true:'icon ion-ios-star',false:'icon ion-ios-star-outline'}[{{item.star}}]" ng-repeat="item in startsItem" ng-click="setStarts({{$index+1}})"></i></div>
+					</div>
+				</div>
+				<div class="t-mine-cmt-tf"><textarea name="" rows="" cols="" placeholder="长度在1-500个字之间，写下购物体会和使用过程中带来的帮助，可以为其他小伙伴提供参考。"></textarea></div>
+				<div class="t-mine-cmt-btn">发表评论</div>
+			</div> -->
+
+			<div class="t-mine-cmt" ng-repeat="item in commentData">
+				<div class="t-mine-cmt-tb">
+					<div class="t-mine-cmt-tb-img"><img ng-src="{{item.upfile}}" alt="" /></div>
+					<div class="t-mine-cmt-tb-con">
+						<div class="t-mine-cmt-tb-con-tit">评价</div>
+						<div class="t-mine-cmt-tb-con-star" ng-if="item.id!=''"><i ng-class="{true:'icon ion-ios-star',false:'icon ion-ios-star-outline'}[{{item2.star}}]" ng-repeat="item2 in item.starObj"></i></div>
+						<div class="t-mine-cmt-tb-con-star" ng-if="item.id==''"><i ng-class="{true:'icon ion-ios-star',false:'icon ion-ios-star-outline'}[{{item2.star}}]" ng-repeat="item2 in item.starObj" ng-click="setStarts($parent.$parent,{{$index+1}})"></i></div>
+					</div>
+				</div>
+				<div class="t-mine-cmt-tf" ng-if="item.id==''"><textarea name="" rows="" cols="" ng-model="item.content" placeholder="长度在1-500个字之间，写下购物体会和使用过程中带来的帮助，可以为其他小伙伴提供参考。"></textarea></div>
+				<div class="t-mine-cmt-tf" ng-if="item.id!=''">{{item.content}}</div>
+				<div class="t-mine-cmt-btn" ng-if="item.id==''" ng-click="postCmt($parent.item)">发表评论</div>
+			</div>
+
+
+	</ion-content>
+</ion-view>

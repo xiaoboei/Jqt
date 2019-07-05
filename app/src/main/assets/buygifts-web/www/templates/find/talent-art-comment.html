@@ -1,0 +1,18 @@
+<ion-view view-title="用户评论" hide-tabs="true" hide-back-button="true">
+<ion-nav-buttons side="left" back-or-home></ion-nav-buttons>
+<ion-nav-buttons side="right"><button class="button" ng-click="postCmt()">发送</button></ion-nav-buttons>
+<ion-content scroll="false" overflow-scroll="true">
+<!-- 	<div class="t-mine-opinion">
+		<form name="dataForm" novalidate>
+				<textarea name="content" rows="" cols="" class="t-mine-opinion-textarea" ng-model="dataObject.content" placeholder="请输入您的评论" required></textarea>
+		</form>
+	</div> -->
+<div class="w-comment">
+<div class="textarea-wrap">
+<!-- <form> -->
+<textarea class="textarea" name="content" ng-model="dataObject.content" placeholder="请输入您的评论" rows="7">{{dataObject.content}}</textarea>
+<!-- </form> -->
+</div>
+</div>
+</ion-content>
+</ion-view>

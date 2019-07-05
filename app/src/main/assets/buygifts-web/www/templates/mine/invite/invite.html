@@ -1,0 +1,13 @@
+<ion-view view-title="我的用户代理商" hide-tabs="true" hide-back-button="true">
+	<ion-nav-buttons side="left" back-or-home></ion-nav-buttons>
+	<ion-content overflow-scroll="true">
+		<div class="t-mine-invite">
+			<form name="dataForm" novalidate>
+				<label class="item item-input">
+					<input type="text" name="number" placeholder="请输入您的邀请码" ng-model="dataObject.number" required>
+				</label>
+				<button class="button button-assertive button-block" ng-click="invite(dataForm)">提交</button>
+			</form>
+		</div>
+	</ion-content>
+</ion-view>

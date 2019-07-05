@@ -1,0 +1,27 @@
+<ion-view view-title="地址管理" hide-tabs="true" hide-back-button="true">
+<ion-nav-buttons side="left" back-or-home></ion-nav-buttons>
+<ion-content class="bg-f4f4f4">
+<!-- 	<div class="t-address-item">
+		<div class="t-address-item-th">陈哈 18621215422</div>
+		<div class="t-address-item-tb">广东省光手指天河区广东省光手指天河区广东省光手指天河区广东省光手指天河</div>
+		<div class="t-address-item-tf">
+		<div class="t-address-item-default" ng-click="setDefaultAddress()"><i class="ion-ios-checkmark cur"></i>默认地址</div>
+		<div class="t-address-item-del" ng-click="delAddress()"><i class="ion-ios-trash-outline"></i>删除</div>
+		<div class="t-address-item-edit" href="#/index/mine/address/4"><i class="ion-ios-compose-outline"></i>编辑</div>
+		</div>
+	</div> -->
+
+	<div class="t-address-item" ng-repeat="item in addressData">
+		<div class="t-address-item-th" ng-click="selectAddress({{item.id}})">{{item.true_name}} {{item.telephone}}</div>
+		<div class="t-address-item-tb" ng-click="selectAddress({{item.id}})">{{item.region_text}}{{item.address}}</div>
+		<div class="t-address-item-tf">
+		<div class="t-address-item-default" ng-click="setDefaultAddress({{item.id}})"><i ng-class="{true:'ion-ios-checkmark cur',false:'ion-ios-checkmark'}[item.is_default=='1']"></i>默认地址</div>
+		<div class="t-address-item-del" ng-click="delAddress({{item.id}})"><i class="ion-ios-trash-outline"></i>删除</div>
+		<a class="t-address-item-edit" href="#/index/mine/address/edit/{{item.id}}"><i class="ion-ios-compose-outline"></i>编辑</a>
+		<a class="t-address-item-use" ng-click="selectAddress({{item.id}})" ng-if="isFromOrder"><i class="ion-paper-airplane"></i>使用</a>
+		</div>
+	</div>
+	<div class="ma-10"><a class="button button-assertive button-block" ui-sref="index.mine-address-add">+ 新增收货地址</a></div>
+	
+</ion-content>
+</ion-view>

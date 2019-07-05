@@ -1,0 +1,44 @@
+<ion-view view-title="我要做达人" hide-tabs="true" hide-back-button="true">
+<ion-nav-buttons side="left" back-or-home></ion-nav-buttons>
+<ion-content overflow-scroll="true">
+	<div class="t-mine-about" ng-if="status==-1">
+		<div class="t-mine-about-tit">邀请您成为途礼游达人</div>
+		<p>成为途礼游达人，您可以拥有专属的达人身份标识，发布最新的资讯信息，还可以获取更多有共同爱好的粉丝，更可享受用户消费推荐产品时所带来的佣金报酬。</p>
+		<p>申请条件：</p>
+		<p>1、用户群体：未申请途礼游达人认证的真实个人活跃用户</p>
+		<p>2、申请标准</p>
+		<p>1) 有头像：头像为清晰的，不违反途礼游协议（色情内容等）的照片（最好为本人近期照片）</p>
+		<p>2) 绑定手机：你的途礼游帐号已经成功绑定手机</p>
+		<p>3) 连续在途礼游登录15天以上 </p>
+	</div>
+	<div class="t-mine-invite" ng-if="status==-1">
+		<form name="dataForm" novalidate>
+			<label class="item item-input">
+				<input type="text" name="true_name" placeholder="请输入您的名字" ng-model="dataObject.true_name" required>
+			</label>
+			<label class="item item-input">
+				<input type="text" name="telephone" placeholder="请输入您的联系电话" ng-model="dataObject.telephone" ng-pattern="/^[0-9]{11}$/" required>
+			</label>
+			<button class="button button-assertive button-block" ng-click="apply(dataForm)">提交</button>
+		</form>
+	</div>
+
+	<div class="t-mine-about" ng-if="status==0">
+		<div class="t-mine-about-tit">您的申请正在审核中...</div>
+	</div>
+	<div class="t-mine-about" ng-if="status==1">
+		<div class="t-mine-about-tit">恭喜您,您的申请已通过</div>
+		<p>您现在可以登录以下网站发布您的文章了：</p>
+		<p>网址：<a ng-click="locationHref(talentLink)">{{talentLink}}</a></p>
+		<p>用户名：{{telephone}}</p>
+		<p>初始密码：{{password}}</p>
+	</div>
+	<div class="t-mine-about" ng-if="status==2">
+		<div class="t-mine-about-tit">很遗憾,您的申请不通过</div>
+		<p>很遗憾,您的申请不通过</p>
+		<button class="button button-assertive button-block" ng-click="applyAgain()">再次申请成为达人</button>
+	</div>
+	<a class="t-talent-rule-btn" ui-sref="index.mine-apply-rule">达人规则</a>
+
+</ion-content>
+</ion-view>

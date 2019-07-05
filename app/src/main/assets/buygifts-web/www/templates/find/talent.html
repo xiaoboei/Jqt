@@ -1,0 +1,101 @@
+<ion-view view-title="达人主页" hide-back-button="true">
+<!-- 重新定义头部左右模块 -->
+<ion-nav-buttons side="left">
+<button class="button icon ion-navicon button-clear" ng-click="menu_click()"></button>
+</ion-nav-buttons>
+<ion-nav-buttons side="right">
+<button class="button icon ion-ios-search-strong button-clear co-888888" ui-sref="index.search"></button>
+<button class="button button-clear" ng-click="scanQRCode()"><i class="w-icon-scan"></i></button>
+</ion-nav-buttons>
+<!-- 重新定义头部中间内容 -->
+<ion-nav-title>
+<a class="button bon" href="#/index/map/location?url={{tabUrl}}" style="width: 83px;white-space: nowrap;text-overflow: ellipsis;overflow: hidden;padding-top:5px;font-size:15px;color:#444;">{{cityName}}&nbsp;<img src="img/dropdownarrow.png" style="width:13px"></a>
+<!-- <div class="t-top-tab">
+	<a ui-sref="index.find">购物</a>
+	<a class="cur">达人</a>
+</div> -->
+</ion-nav-title>
+<!-- 主体 -->
+<div  ng-click="hide_menu()">
+<ion-content class="bg-f4f4f4" overflow-scroll="true">
+	<div class="i_list" ng-if="menu_show">
+		<ul>
+	        <li ng-repeat="item in menuData" style="border-top:0;">
+	            <a href="#/index/find/talent-article/{{item.id}}"><i><img src="{{item.upfile}}" /></i><span>{{item.text}}</span></a>
+	        </li>
+	        <!--<li ng-repeat="item in menuData" style="border-top:0;">-->
+	            <!--<a href="#/index/find/classify/{{item.id}}"><i class="i_{{$index+1}}"><img src="{{item.upfile}}"></i><span>{{item.text}}</span></a>-->
+	        <!--</li>-->
+		</ul>
+	</div>
+
+	<ion-scroll style="height:100%" overflow-scroll="true" on-scroll="hide_menu()">
+		<div class="t-topman-item" ng-if="hotArticle">
+			<div class="t-topman-banner">
+				<div class="t-topman-banner-recommend"></div>
+				<a class="t-topman-banner-l" href="#/index/find/talent/{{talentRecommendData.talent.id}}">
+					<div class="t-topman-banner-l-img"><img ng-src="{{talentRecommendData.talent.upfile}}" alt="" /></div>
+					<div class="t-topman-banner-l-con">
+						<div class="t-topman-banner-l-con-tit">{{talentRecommendData.talent.name}}</div>
+						<div class="t-topman-banner-l-con-des"><em>LV{{talentRecommendData.talent.rank}}</em>{{talentRecommendData.talent.title}}</div>
+					</div>
+				</a>
+				<div class="t-topman-banner-r" ng-click="collectTalent(talentRecommendData.talent)" ng-bind-html="talentRecommendData.talent.is_fans_text" style="right:40px;"></div>
+			</div>
+			<a class="t-topman-item-title" href="#/index/find/talent/art/{{talentRecommendData.article.id}}">{{talentRecommendData.article.title}}</a>
+			<a class="t-topman-item-img" href="#/index/find/talent/art/{{talentRecommendData.article.id}}"><img ng-src="{{talentRecommendData.article.upfile}}" alt="" /></a>
+
+	        <!--<div class="t-topman-item-pros">-->
+				<!--<div class="t-topman-item-pros-imgs" ng-repeat="item in talentRecommendData.article.product | limitTo:3">-->
+				<!--<a href="#/index/find/art/{{item.id}}"><img ng-src="{{item.upfile}}" alt=""></a>-->
+				<!--<span ng-class="{true:'cur',false:''}[item.is_fans==1]" ng-click="collectPro(item)">{{item.collection}}</span>-->
+				<!--</div>-->
+			<!--</div>-->
+			<div class="t-topman-item-ft">
+				<span class="t-topman-item-ft-like" ng-class="{true:'cur',false:''}[talentRecommendData.article.is_fans==1]" ng-click="collectArt(talentRecommendData.article)">{{talentRecommendData.article.likes}}</span>
+				<span class="t-topman-item-ft-data">{{talentRecommendData.article.create_time * 1000 | date:'yyyy-MM-dd HH:mm'}}</span>
+			</div>
+		</div>
+
+
+		<!-- 标签切换 -->
+		<div class="t-topman-tab">
+			<a ng-class="{active : order == '2'}" ng-click="getTalentData(2)"><span>最新</span></a>
+	        <a ng-class="{active : order == '1'}" ng-click="getTalentData(1)"><span>热门</span></a>
+		</div>
+
+		<div class="t-topman-item" ng-repeat="item in itemsData">
+			<div class="t-topman-banner">
+				<a class="t-topman-banner-l" href="#/index/find/talent/{{item.talent.id}}">
+					<div class="t-topman-banner-l-img"><img ng-src="{{item.talent.upfile}}" alt="" /></div>
+					<div class="t-topman-banner-l-con">
+						<div class="t-topman-banner-l-con-tit">{{item.talent.name}}</div>
+						<div class="t-topman-banner-l-con-des"><em>LV{{item.talent.rank}}</em>{{item.talent.title}}</div>
+					</div>
+				</a>
+				<div class="t-topman-banner-r" ng-click="collectTalent(item.talent)" ng-bind-html="item.talent.is_fans_text"></div>
+			</div>
+			<a class="t-topman-item-title" href="#/index/find/talent/art/{{item.id}}">{{item.title}}</a>
+			<a class="t-topman-item-img" href="#/index/find/talent/art/{{item.id}}"><img src="{{item.upfile}}" alt="" /></a>		
+			<div class="t-topman-item-ft">
+				<span class="t-topman-item-ft-like" ng-class="{true:'cur',false:''}[item.is_fans==1]" ng-click="collectArt(item)">{{item.likes}}</span>
+				<span class="t-topman-item-ft-data">{{item.create_time * 1000 | date:'yyyy-MM-dd HH:mm'}}</span>
+			</div>
+		</div>
+		<div class="w-search-empty" ng-show="listHint">
+	        <img src="img/maps/empty.png" alt="">
+	        很抱歉，暂时没有相关内容
+	    </div>
+		<!-- <button class="button button-block" ng-bind="loadText" ng-click="loadMoreData()"></button> -->
+		<!-- <div class="" style="height:20px;"></div> -->
+		<ion-infinite-scroll	
+		ng-if="currentPage < pageCount"	
+	    on-infinite="loadMoreData()"
+	    distance="1%">
+	  </ion-infinite-scroll>
+	</ion-scroll>
+
+
+</ion-content>
+</div>
+</ion-view>

@@ -1,0 +1,20 @@
+<ion-view view-title="达人列表" hide-tabs="true" hide-back-button="true">
+    <ion-nav-buttons side="left" back-or-home></ion-nav-buttons>
+
+    <ion-content class="bg-f4f4f4" overflow-scroll="true">
+
+        <div class="t-topman-banner" ng-repeat="item in itemsData">
+            <a class="t-topman-banner-l" href="#/index/find/talent/{{item.busines_id}}">
+                <div class="t-topman-banner-l-img"><img ng-src="{{item.upfile}}" alt="" /></div>
+                <div class="t-topman-banner-l-con">
+                    <div class="t-topman-banner-l-con-tit">{{item.name}}</div>
+                    <div class="t-topman-banner-l-con-des"><span>获赞 {{item.article_laud_count}}</span><span class="pl-10">粉丝 {{item.count}}</span></div>
+                    <!--<div class="t-topman-banner-l-con-des"><em>LV12</em>特产手办</div>-->
+                </div>
+            </a>
+            <div class="t-topman-banner-r" ng-click="collectTalent(item)" ng-bind-html="item.is_fans_text"></div>
+        </div>
+        <button class="button button-block" ng-bind="loadText" ng-click="loadMoreData()"></button>
+    </ion-content>
+
+</ion-view>

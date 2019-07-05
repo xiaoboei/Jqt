@@ -1,0 +1,84 @@
+{
+  "name": "tuliyou",
+  "version": "1.1.1",
+  "description": "tuliyou: An Ionic project",
+  "dependencies": {
+    "gulp": "^3.5.6",
+    "gulp-sass": "^2.0.4",
+    "gulp-concat": "^2.2.0",
+    "gulp-minify-css": "^0.3.0",
+    "gulp-rename": "^1.2.0"
+  },
+  "devDependencies": {
+    "bower": "^1.3.3",
+    "gulp-util": "^2.2.14",
+    "shelljs": "^0.3.0"
+  },
+  "cordovaPlugins": [
+    "cordova-plugin-device",
+    "cordova-plugin-console",
+    "cordova-plugin-whitelist",
+    "cordova-plugin-splashscreen",
+    "cordova-plugin-statusbar",
+    "ionic-plugin-keyboard",
+    "org.apache.cordova.file",
+    "org.apache.cordova.file-transfer",
+    {
+      "variables": {
+        "API_KEY": "591208e4e33254e4885372e1"
+      },
+      "locator": "https://git.oschina.net/i3ncto/jpush-phonegap-plugin.git",
+      "id": "cn.jpush.phonegap.JPushPlugin"
+    },
+    {
+      "locator": "https://git.oschina.net/i3ncto/CordovaBarcode.git",
+      "id": "com.phonegap.plugins.barcodescanner"
+    },
+    {
+      "variables": {
+        "PARTNER_ID": "2088912066467739",
+        "SELLER_ACCOUNT": "juyouwenhua@163.com",
+        "PRIVATE_KEY": "MIICdwIBADANBgkqhkiG9w0BAQEFAASCAmEwggJdAgEAAoGBAMZyGzSu7Dq5Fe4d6jbQfTRAnfyq761fwLkTP/ssvJts3FFVKQPFOToWjF7aaI9KAuE1l6t4A5PvPijrU9cz7uLhrkXmE9wn41yEA6wYxXP6RJsuJl4hamkaghDZBWX/2xSsWZDo6S/thWFcOU1sRiNVV4P+aJFFE8XyS+VBhoT9AgMBAAECgYBWEJDaBW8wfKsVLWYxxbQ3YDrkpSHzmE6WNdIO1jUqV0kqAPwbxYJvPe49CQ5F7rxW/g48cH1kwGK+Dmm7MKvOeFpl8yWeLYlcD19Ruk9+J2p9BwJIQFD+rdKMCrk8516NeWV0Ml4fBcrSS+6gRMaa96ah4aegfwa1CP2wHDxzZQJBAPAeAm77MCPHtt/C7NbmRs7VQovDX21nbE4ZG4UzWaMpI13RMqOyoUzCukaDb6agb1zKMLJjMNE8+LJ3uaf04l8CQQDTknVd72+Y2/tOv3+uhMoDxbMH73sCbnvLvdAAN4pH0n6bErK81qPruawPC8xbuoLRjBh9MYkjqKaBPRSbMa4jAkEAiUbe5Uw+bXZUmwD6HrJwcPeDoBwGhqnGRbAdB74f1SRDz/M2HFiX1ybNEFs8jerTQB1oUdRbqIRPOtkwD1H1yQJAS/l16AuJOY0VS4v838CTgpNF3P2kYJUoI1vAC7PmFjCCglFOmf1B0+5S2PxVoELzoyf5y0s0gfeYAyTZ93j5nQJBAJamcqoiL2OmIwDPj5Zsoo395LeAk+KDxZA3ENAKnbg0AqYD0Be/69K9aLpkAkgzps9ZTVefJPpZsat4+Lt2Pv4="
+      },
+      "locator": "https://git.oschina.net/i3ncto/cordova-plugin-alipay.git",
+      "id": "wang.imchao.plugin.alipay"
+    },
+    {
+      "variables": {
+        "wechatappid": "wxefe7504bbabaf2d6"
+      },
+      "locator": "cordova-plugin-wechat",
+      "id": "cordova-plugin-wechat"
+    },
+    "cordova-plugin-geolocation",
+    {
+      "variables": {
+        "UMENG_IOS_ID": "5719c86ee0f55a35c5001408",
+        "UMENG_ANDROID_ID": "5719c7ab67e58e9535001cd6"
+      },
+      "locator": "https://git.oschina.net/i3ncto/cordova-plugin-umeng-analytics.git",
+      "id": "com.qiudao.cordova.umeng-analytics"
+    },
+    {
+      "locator": "https://git.oschina.net/i3ncto/cordova-plugin-inappbrowser.git",
+      "id": "cordova-plugin-inappbrowser"
+    },
+    {
+      "locator": "https://git.oschina.net/i3ncto/cordova-plugin-network-information.git",
+      "id": "cordova-plugin-network-information"
+    },
+    {
+      "locator": "https://git.oschina.net/i3ncto/cordova-plugin-app-version.git",
+      "id": "cordova-plugin-app-version"
+    },
+    {
+      "locator": "https://git.oschina.net/i3ncto/cordova-plugin-file-opener2.git",
+      "id": "cordova-plugin-file-opener2"
+    }
+  ],
+  "cordovaPlatforms": [
+    "ios",
+    "android",
+    "browser"
+  ]
+}

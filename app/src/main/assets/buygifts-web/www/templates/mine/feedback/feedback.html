@@ -1,0 +1,13 @@
+<ion-view view-title="用户反馈" hide-tabs="true" hide-back-button="true">
+	<ion-nav-buttons side="left" back-or-home></ion-nav-buttons>
+	<ion-content overflow-scroll="true">
+		<div class="t-mine-opinion">
+			<form name="dataForm" novalidate>
+				<!-- <label class="item item-input"> -->
+					<textarea name="content" rows="" cols="" class="t-mine-opinion-textarea" ng-model="dataObject.content" placeholder="请输入您的建议" required></textarea>
+				<!-- </label> -->
+				<button class="button button-assertive button-block" ng-click="feedback(dataForm)">提交</button>
+			</form>
+		</div>
+	</ion-content>
+</ion-view>

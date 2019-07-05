@@ -1,0 +1,153 @@
+<ion-view view-title="商品详情" hide-back-button="true">
+	<ion-nav-buttons side="left">
+		<button class="button icon ion-ios-arrow-back button-clear" ui-sref="index.classify"></button>
+	</ion-nav-buttons>
+	<ion-nav-buttons side="right">
+		<button class="button icon ion-android-share-alt bon" ng-click="showShare()"></button>
+	</ion-nav-buttons>
+
+	<ion-nav-title>
+		商品详情
+		<button class="button icon ion-ios-eye button-clear gns-right-btn" ui-sref="index.classify-history"></button>
+	</ion-nav-title>
+
+
+
+	<ion-content>
+		<ion-slide-box does-continue="true" class="gns-slider-wrap">
+			<ion-slide>
+				<div class="gns-slider">
+					<img src="img/home-slide.png" alt="" />
+				</div>
+			</ion-slide>
+			<ion-slide>
+				<div class="gns-slider">
+					<img src="img/home-slide.png" alt="" />
+				</div>
+			</ion-slide>
+			<ion-slide>
+				<div class="gns-slider">
+					<img src="img/home-slide.png" alt="" />
+				</div>
+			</ion-slide>
+		</ion-slide-box>
+
+		<div class="gns-classify-art-tit">{{result.name}}</div>
+		<div class="gns-classify-art-price">
+			<em>{{result.price}}元/斤</em>
+			<del>{{result.marketPrice}}元/斤</del>
+			<div class="gns-classify-art-price-add" ng-click="add()">+</div>
+			<div class="gns-classify-art-price-num">{{result.num}}</div>
+			<div class="gns-classify-art-price-minus" ng-click="reduce()">-</div>
+		</div>
+		<div class="gns-classify-tab">
+			<a ng-class="{'gns-classify-tab-item-active':isShowXQ}" class="gns-classify-tab-item" ng-click="ShowXQ(1)"><em>商品详情</em></a>
+			<a ng-class="{'gns-classify-tab-item-active':!isShowXQ}" class="gns-classify-tab-item" ng-click="ShowXQ(2)"><em>评价晒单</em></a>
+		</div>
+		<div class="gns-classify-tb" style="margin-bottom:40px;">
+			<div class="gns-classify-tb-1" ng-show="isShowXQ">
+				<!-- 果实百科 S -->
+				<div class="gns-classify-baike">
+					<div class="gns-classify-baike-tit">果实百科</div>
+					<div class="gns-classify-baike-con">
+						<div class="gns-classify-baike-l"><img src="http://temp.im/100x100" alt="" /></div>
+						<div class="gns-classify-baike-r">
+							<div class="gns-classify-baike-r-tit">炎炎夏日叫你做甜品炎炎夏日叫你做甜品</div>
+							<div class="gns-classify-baike-r-time">2015-15-15</div>
+						</div>
+					</div>
+					<div class="gns-classify-baike-des" ng-show="isShowBK">炎炎夏日叫你做甜品炎炎夏日叫你做甜品炎炎夏日叫你做甜品炎炎夏日叫你做甜品炎炎夏日叫你做甜品炎炎夏日叫你做甜品炎炎夏日叫你做甜品炎炎夏日叫你做甜品炎炎夏日叫你做甜品炎炎夏日叫你做甜品炎炎夏日叫你做甜品炎炎夏日叫你做甜品炎炎夏日叫你做甜品炎炎夏日叫你做甜品炎炎夏日叫你做甜品炎炎夏日叫你做甜品炎炎夏日叫你做甜品炎炎夏日叫你</div>
+					<div ng-class="{'gns-classify-baike-icon-down':!isShowBK,'gns-classify-baike-icon-up':isShowBK}" ng-click="ShowBK()"></div>
+				</div>
+				<!-- 果实百科 E -->
+
+				<!-- 商品详情 S -->
+				<div class="gns-classify-art-con">
+					<div class="gns-classify-art-con-tit">商品详情</div>
+					<p><img src="img/home-slide.png" alt="" /></p>
+					<p><img src="img/home-slide.png" alt="" /></p>
+					<p><img src="img/home-slide.png" alt="" /></p>
+					<p><img src="img/home-slide.png" alt="" /></p>
+				</div>
+				<!-- 商品详情 E -->
+
+				<!-- 购买该商品的果友也购买了 S -->
+				<div class="gns-classify-little-tit">购买该商品的果友也购买了</div>
+				<div class="gns-classify-proList">
+					<a href="" class="gns-classify-pro">
+						<img src="http://temp.im/100x100" alt="" />
+						<div class="gns-classify-pro-tit">新鲜水果新鲜水果新鲜水果</div>
+						<div class="gns-classify-pro-price"><em>15.7元/斤</em><del>37.5元/斤</del></div>
+						<div class="gns-classify-pro-des">月成交<em>72笔</em></div>
+					</a>
+					<a href="" class="gns-classify-pro">
+						<img src="http://temp.im/100x100" alt="" />
+						<div class="gns-classify-pro-tit">新鲜水果新鲜水果新鲜水果</div>
+						<div class="gns-classify-pro-price"><em>15.7元/斤</em><del>37.5元/斤</del></div>
+						<div class="gns-classify-pro-des">月成交<em>72笔</em></div>
+					</a>
+				</div>
+				<!-- 购买该商品的果友也购买了 E -->
+			</div>
+			<div class="gns-classify-tb-2" ng-hide="isShowXQ">
+				<!-- 商品评价 S -->
+				<div class="gns-classify-comment">
+					
+					<div class="gns-classify-comment-th" ng-bind-html="nameAndstarts('xxx',2)"></div>
+
+					<div class="gns-classify-comment-des">东西不错东西不错东西不</div>
+					<div class="gns-classify-comment-time">2015-15-15</div>
+				</div>
+				<div class="gns-classify-comment">
+					<div class="gns-classify-comment-th">
+						庄*** &emsp;
+						<i class="icon ion-ios-star"></i>
+						<i class="icon ion-ios-star"></i>
+						<i class="icon ion-ios-star"></i>
+						<i class="icon ion-ios-star"></i>
+						<i class="icon ion-ios-star"></i>
+					</div>
+					<div class="gns-classify-comment-des">东西不错东西不错东西不</div>
+					<div class="gns-classify-comment-time">2015-15-15</div>
+				</div>
+				<!-- 商品评价 E -->
+			</div>
+		</div>
+
+
+	</ion-content>
+
+	<!-- 底部功能条 S -->
+	<div class="gns-classify-bottom">
+		<a class="gns-classify-bottom-s1"><em>一键拨号</em></a>
+		<!-- 如果是未收藏则去掉类名 gns-classify-bottom-s2-active -->
+		<a class="gns-classify-bottom-s2 gns-classify-bottom-s2-active"><em>收藏</em></a>
+		<a class="gns-classify-bottom-s3" ng-click="addCart(result.id)">加入购物车</a>
+		<a class="gns-classify-bottom-s4" ng-click="buy()">立即结算</a>
+	</div>
+	<!-- 底部功能条 E -->
+
+	<!-- 分享底部条 S -->
+	<div class="gns-share-bg" ng-show="isshowShare" ng-click="showShare()"></div>
+	<section class="gns-share-plate" ng-show="isshowShare">
+		<a class="gns-share-plate-item" ng-click="shareWXfriend()" >
+			<div class="gns-share-plate-item-pic"><img src="img/shareWXfriend.png" alt="" /></div>
+			<div class="gns-share-plate-item-tit">微信好友</div>
+		</a>
+		<a class="gns-share-plate-item" ng-click="shareWXzone()">
+			<div class="gns-share-plate-item-pic"><img src="img/shareWXzone.png" alt="" /></div>
+			<div class="gns-share-plate-item-tit">朋友圈</div>
+		</a>
+		<a class="gns-share-plate-item" ng-click="shareQQfriend()">
+			<div class="gns-share-plate-item-pic"><img src="img/shareQQfriend.png" alt="" /></div>
+			<div class="gns-share-plate-item-tit">QQ好友</div>
+		</a>
+		<a class="gns-share-plate-item" ng-click="shareQQzone()">
+			<div class="gns-share-plate-item-pic"><img src="img/shareQQzone.png" alt="" /></div>
+			<div class="gns-share-plate-item-tit">QQ空间</div>
+		</a>
+	</section>
+	<!-- 分享底部条 E -->
+
+
+</ion-view>

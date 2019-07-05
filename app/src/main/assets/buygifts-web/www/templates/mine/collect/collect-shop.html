@@ -1,0 +1,62 @@
+<ion-view view-title="我的收藏" hide-back-button="true">
+<!-- <ion-nav-buttons side="left" back-or-home></ion-nav-buttons> -->
+	<ion-nav-buttons side="left">
+		<button class="button icon ion-ios-arrow-back button-clear" ng-click="goToMine()"></button>
+	</ion-nav-buttons>
+	<ion-nav-title>
+		<div class="t-mine-collect-tab">
+			<a ui-sref="index.mine-collect-product">收藏的商品</a>
+			<a ui-sref="index.mine-collect-talent">关注的达人</a>
+			<a class="cur">关注的商家</a>
+		</div>
+	</ion-nav-title>
+	<ion-content class="bg-f4f4f4">
+		<div class="list">
+			<div class="item fs-12 pdt-10 pdb-10">收藏的商家</div>
+			<a class="item item-icon-right" ng-repeat="item in shopData" href="#/index/find/shop/{{item.id}}">
+				<div class="t-mine-collect-shop">
+					<div class="t-mine-collect-shop-img"><img ng-src="{{item.upfile}}" alt="" /></div>
+					<div class="t-mine-collect-shop-tit">{{item.name}}</div>
+				</div>
+				<i class="icon ion-ios-arrow-right co-cccccc fs-22"></i>
+			</a>
+<!-- 			<a class="item item-icon-right">
+				<div class="t-mine-collect-shop">
+					<div class="t-mine-collect-shop-img"><img ng-src="http://temp.im/200x200" alt="" /></div>
+					<div class="t-mine-collect-shop-tit">小白旗舰店</div>
+				</div>
+				<i class="icon ion-ios-arrow-right co-cccccc fs-22"></i>
+			</a> -->
+			<div class="t-empty" ng-if="shopData.length==0">
+			<img ng-src="img/maps/empty.png" alt="">
+			很抱歉，暂时没有相关内容
+			</div>
+
+		</div>
+
+		<div class="list">
+			<div class="item fs-12 pdt-10 pdb-10">收藏的景点</div>
+			<a class="item item-icon-right" ng-repeat="item in scenicData" href="#/index/map/scenic/{{item.id}}">
+				<div class="t-mine-collect-shop">
+					<div class="t-mine-collect-shop-img"><img ng-src="{{item.upfile}}" alt="" /></div>
+					<div class="t-mine-collect-shop-tit">{{item.name}}</div>
+				</div>
+				<i class="icon ion-ios-arrow-right co-cccccc fs-22"></i>
+			</a>
+			<div class="t-empty" ng-if="scenicData.length==0">
+			<img ng-src="img/maps/empty.png" alt="">
+			很抱歉，暂时没有相关内容
+			</div>
+		</div>
+
+
+
+
+
+
+
+
+
+
+	</ion-content>
+</ion-view>

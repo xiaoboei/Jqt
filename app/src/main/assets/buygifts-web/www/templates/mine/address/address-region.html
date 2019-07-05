@@ -1,0 +1,22 @@
+<ion-view view-title="选择地区" hide-tabs="true" hide-back-button="true">
+<ion-nav-buttons side="left" back-or-home></ion-nav-buttons>
+<ion-content>
+<style>
+.t-area .item{font-size:15px;padding:10px 16px;}
+.t-area .item2{font-size:14px;padding:8px 16px 8px 32px;}
+.t-area .item3{font-size:12px;padding:5px 16px 5px 48px;}
+</style>
+	<div class="list t-area">
+		<div ng-repeat="item in regionData">
+			<a class="item item-icon-right" ng-click="toggleCity({{item.id}},'{{item.text}}')">{{item.text}}<i class="icon co-cccccc fs-22" ng-class="{true:'ion-ios-arrow-up',false:'ion-ios-arrow-down'}[isCityOpen]"></i></a>
+			<div ng-repeat="item2 in item.children" ng-if="isCityOpen">
+				<a class="item item2 item-icon-right" ng-click="toggleArea({{item2.id}},'{{item2.text}}')">{{item2.text}}<i class="icon co-cccccc fs-22" ng-class="{true:'ion-ios-arrow-up',false:'ion-ios-arrow-down'}[isAreaOpen]"></i></a>
+				<div ng-repeat="item3 in item2.children" ng-if="isAreaOpen">
+					<a class="item item3 item-icon-right" ng-click="selectArea({{item3.id}},'{{item3.text}}')">{{item3.text}}</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</ion-content>
+</ion-view>
+

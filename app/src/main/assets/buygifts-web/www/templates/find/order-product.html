@@ -1,0 +1,32 @@
+<ion-view view-title="商品清单" hide-back-button="true" hide-tabs="true">
+	<ion-nav-buttons side="left" back-or-home></ion-nav-buttons>
+	<ion-nav-buttons side="right">
+		<button class="button">共{{wantToBuyData.total_num}}件</button>
+	</ion-nav-buttons>
+	<ion-content overflow-scroll="true">
+		<div class="list">
+			<a class="item t-list" ng-repeat="item in wantToBuyData.product" href="#/index/find/art/{{item.product_id}}">
+				<div class="t-list-pic"><img ng-src="{{item.upfile}}" alt=""></div>
+				<div class="t-list-tb">
+					<div class="t-list-tit">{{item.name}}</div>
+					<div class="t-list-info">{{item.style_name}}</div>
+					<div class="t-list-price">
+						<div class="t-list-price-l">{{item.price | currency:"￥"}}</div>
+						<div class="t-list-price-r">x{{item.num}}</div>
+					</div>
+				</div>
+			</a>
+<!-- 			<a class="item t-list" href="">
+				<div class="t-list-pic"><img ng-src="http://temp.im/100x100" alt=""></div>
+				<div class="t-list-tb">
+					<div class="t-list-tit">新鲜水果新鲜水果新鲜水果新鲜水果新鲜水果新鲜水果新鲜水果新鲜水果</div>
+					<div class="t-list-info">颜色：橘黄色</div>
+					<div class="t-list-price">
+						<div class="t-list-price-l">$85</div>
+						<div class="t-list-price-r">x2</div>
+					</div>
+				</div>
+			</a> -->
+		</div>
+	</ion-content>
+</ion-view>

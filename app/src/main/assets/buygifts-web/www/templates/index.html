@@ -1,0 +1,14 @@
+<ion-tabs class="tabs-icon-top tabs-stable" ng-class="{'tabs-item-hide':hideTabs}">
+	<ion-tab title="地图" class="assertive" icon-on="ion-ios-navigate" icon-off="ion-ios-navigate-outline" ng-click="goToMap()">
+		<ion-nav-view scroll="false" name="map-tab"></ion-nav-view>
+	</ion-tab>
+	<ion-tab title="商城" class="assertive" icon-on="ion-ios-world" icon-off="ion-ios-world-outline" ng-click="goUrl('index.find')">
+		<ion-nav-view scroll="false" name="find-tab"></ion-nav-view>
+	</ion-tab>
+	<ion-tab title="达人" class="assertive" icon-on="ion-ios-talent" icon-off="ion-ios-talent-outline" ng-click="goUrl('index.find-talent')">
+		<ion-nav-view scroll="false" name="tarento-tab"></ion-nav-view>
+	</ion-tab>
+	<ion-tab title="我的" class="assertive" icon-on="ion-ios-person" icon-off="ion-ios-person-outline" ng-click="goToMine()">
+		<ion-nav-view scroll="false" name="mine-tab"></ion-nav-view>
+	</ion-tab>
+</ion-tabs>

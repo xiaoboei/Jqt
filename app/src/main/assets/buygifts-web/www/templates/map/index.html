@@ -1,0 +1,38 @@
+<!-- 如果有些页面想隐藏tab的话 在 ion-view 标签上添加 hide-tabs 属性 -->
+<ion-view view-title="地图" hide-back-button="true">
+<!-- 重新定义头部左右模块 -->
+<ion-nav-buttons side="left">
+<button class="button icon ion-location bon" ui-sref="index.map-location" style="width: 83px;white-space: nowrap;text-overflow: ellipsis;overflow: hidden;">{{cityName}}</button>
+</ion-nav-buttons>
+<ion-nav-buttons side="right">
+<button class="button icon ion-ios-search-strong button-clear co-888888" ui-sref="index.search"></button>
+<button class="button button-clear" ng-click="scanQRCode()"><i class="w-icon-scan"></i></button>
+</ion-nav-buttons>
+<!-- 重新定义头部内容 -->
+<ion-nav-title>
+<div class="t-top-tab">
+ <a ng-repeat="item in classify" ng-class="{cur : item.id == classifyId}" ng-click="changeClassify(item.id, item.type)">{{item.name}}</a>
+</div>
+</ion-nav-title>
+<!-- 主体 -->
+<ion-content scroll="false" class="has-header" overflow-scroll="true">
+
+<div class="w-map-nav">
+    <div class="inner">
+    <a href="javascript:;" ng-repeat="item in list" ng-click="changeScene(item.id, item.type)" ng-class="{active:viewId == item.id}">{{item.name}}</a>
+    </div>
+</div>	
+	<div ui-view ng-hide="mapshow"></div>
+	<!-- <ion-nav-view name="tabs"></ion-nav-view> -->
+<!-- <div style="overflow:auto; -webkit-overflow-scrolling:touch; overflow-y: scroll !important;"> -->
+  <div class="w-map-ctrl" ng-show="wmaps">
+    <a  ng-show="mapshow" ng-click="changeSceneG()" href="javascript:;"><i class="icon-loop"></i></a>
+  </div>
+  <iframe ng-if="mapshow" ng-src="{{link}}" scrolling="no" frameborder="0" width="100%" height="100%" id="map" style="width: 1px; min-width: 100%; *width: 100%; height: calc(100% + 1px);"></iframe>
+<!-- </div> -->
+  <!-- <div class="navigator" ng-hide="item.type==0">
+    <a href="javascript:;" class="navigator__button navigator__button--up js-up"></a>
+    <a href="javascript:;" class="navigator__button navigator__button--down js-down"></a>
+  </div> -->
+</ion-content>
+</ion-view>

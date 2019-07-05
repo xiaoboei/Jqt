@@ -1,0 +1,177 @@
+<ion-view view-title="商品详情" hide-tabs="true" hide-back-button="true">
+	<ion-nav-buttons side="left" back-or-home></ion-nav-buttons>
+	<ion-nav-buttons side="right">
+	    <button class="button icon ion-ios-cart-outline" ng-click="isLoginGoUrl('index.find-cart')">{{cartNum}}</button>
+        <button class="button icon ion-share" ng-click="showShare(1)"></button>
+	</ion-nav-buttons>
+	<ion-nav-title>
+		<div class="t-top-tab" id="JtopTab">
+			<!-- <a ng-click="ShowXQ(0)" ng-class="{'cur':!isShowXQ}">商品</a> -->
+			<!-- <a ng-click="ShowXQ(1)" ng-class="{'cur':isShowXQ}">详46s情</a> -->
+			<a ng-click="ShowXQ(0)" ng-class="{'cur' : tabshow == 0}">商品</a>
+			<a ng-click="ShowXQ(1)" ng-class="{'cur' : tabshow == 1}">详情</a>
+		</div>
+	</ion-nav-title>
+
+	<ion-content class="bg-f4f4f4" delegate-handle="mainScroll" id="xScroll" style="" on-scroll="onscroll()">
+
+		<!-- <ion-scroll ng-show="!isShowXQ" style="height:100%" delegate-handle="mainScroll" on-scroll="aaa()" id="mainScroll"> -->		
+		<div id="JmainScroll">
+			<div class="t-art" id="mainArt">
+				<ion-slide-box does-continue="true" class="t-art-bigPic-wrap" does-continue="true" on-slide-changed="slideHasChanged(index)">
+					<ion-slide ng-repeat="item in proData.product.upfile">
+						<a class="t-art-bigPic" style="background-image:url({{item}});"></a>
+					</ion-slide>
+				</ion-slide-box>
+
+
+				<div class="t-art-tit" ng-bind-html="proData.product.name | trustHtml"></div>
+				<div class="t-art-price">
+					<em>{{proData.product.price | currency:"￥"}}</em>
+					<span ng-class="{true:'ion-ios-heart',false:'ion-ios-heart-outline'}[isCollectPro]" ng-click="collectPro()"> {{proData.product.collection}}</span>
+				</div>
+				<div class="t-art-info"><span>快递：{{proData.product.exp_charge | currency:"￥"}}</span>
+                    <span>库存：{{proData.product.inventory}}件</span><span>销量{{proData.product.sales}}件</span>
+                    <span>{{proData.product.shipping_address_pro}}{{proData.product.shipping_address_city}}</span>
+                    <span ng-if="proData.product.is_purchase==1" style="color: red;">每人限购{{proData.product.purchase_number}}件</span>
+                </div>
+				<div class="list t-art-section" ng-click="toggleType()">
+					<div class="item item-icon-right">
+						<span class="fw-b assertive"> | </span>选择款式
+						<i class="icon ion-ios-arrow-up co-cccccc fs-22" ng-class="{true:'ion-ios-arrow-up',false:'ion-ios-arrow-down'}[isShowType]"></i>
+					</div>
+				</div>
+				<div class="t-art-type" ng-show="isShowType">
+					<!-- 未选默认没类名 选择类名：cur 无货类名：none -->
+					<a ng-class="{'cur':selectTypeId=={{item.id}},'none':0=={{item.num}}}" ng-repeat="item in proData.style" ng-click="selectType({{item.id}},{{item.num}})">{{item.name}}</a>
+				</div>
+				<div class="list t-art-section" ng-click="toggleNum()">
+					<div class="item item-icon-right">
+						<span class="fw-b assertive"> | </span>选择数量
+						<i class="icon ion-ios-arrow-up co-cccccc fs-22" ng-class="{true:'ion-ios-arrow-up',false:'ion-ios-arrow-down'}[isShowNum]"></i>
+					</div>
+				</div>
+				<div class="t-art-type" ng-show="isShowNum">
+					<div class="t-cart-pro-count">
+						<div class="t-cart-pro-minus" ng-click="minus()"></div>
+						<div class="t-cart-pro-num" ng-bind="num">1</div>
+						<div class="t-cart-pro-add ion-plus" ng-click="add()"></div>
+					</div>
+				</div>
+				<div class="list t-art-section" ng-click="toggleOption()">
+					<div class="item item-icon-right">
+						<span class="fw-b assertive"> | </span>产品参数
+						<i class="icon ion-ios-arrow-up co-cccccc fs-22" ng-class="{true:'ion-ios-arrow-up',false:'ion-ios-arrow-down'}[isShowOption]"></i>
+					</div>
+				</div>
+				<div class="t-art-option" ng-bind-html="proData.product.description | trustHtml" ng-show="isShowOption">
+				</div>
+
+				<div class="t-art-shop">
+					<a class="t-art-shop-th" href="#/index/find/shop/{{proData.store.id}}">
+						<div class="t-art-shop-th-img"><img ng-src="{{proData.store.upfile}}" alt="" /></div>
+						<div class="t-art-shop-th-con">
+							<div class="t-art-shop-th-con-tit">{{proData.store.name}}</div>
+							<div class="t-art-shop-th-con-lv"><em ng-if="proData.store.rank">LV{{proData.store.rank}}</em></div>
+						</div>
+					</a>
+					<div class="t-art-shop-info">
+						<div class="t-art-shop-info-l">全部商品<em>{{proData.store.product_counts}}</em></div>
+						<div class="t-art-shop-info-r">收藏人数<em ng-bind="proData.store.favorite_counts"></em></div>
+					</div>
+				</div>
+				<div class="t-art-tj" ng-if="collectUserData.length>0">
+					<div class="t-art-tj-tit">{{collectUserData.length}}人收藏了这个商品</div>
+					<div class="t-art-tj-con">
+						<a ng-repeat="item in collectUserData | limitTo:number"><img ng-src="{{item.upfile}}" alt="" /></a>
+						<a ng-click="coolectUserToggle()" ng-if="toggleOpen"><img ng-src="{{toggleImg}}" /></a>	
+						<!-- <a ng-if="collectPageData.itemCount>5"><img ng-src="img/more.png" alt="" /></a> -->
+					</div>
+				</div>
+
+
+
+				<!-- <div class="t-art-continue" ng-click="ShowXQ(1)">继续点击 查看详情</div> -->
+				<!-- <div ng-show="tabshow" class="t-art-continue" style="margin-bottom:60px;">继续拖动 查看详情</div> -->
+				
+			</div>
+		</div>		
+		
+		<!-- <div style="min-height:100%;overflow-y:scroll;padding-bottom:51px;" id="JXQ" ng-hide="tabshow"> -->
+		<div style="min-height:100%;overflow-y:scroll;padding-bottom:51px;" id="JXQ">
+			<div class="t-art">
+				<div class="t-art-detail" ng-bind-html="proData.product.content | trustHtml">商品详情</div>
+				<div class="t-art-continue" ng-click="ShowXQ(0)">返回商品</div>
+
+
+				<div class="t-art-continue" ng-click="showCmt()" ng-if="!isShowCmt">点击查看评论</div>
+				<div class="t-art-comment" ng-show="isShowCmt">
+					<div class="t-art-comment-tit">评论 {{itemCount}}</div>
+					<div class="t-empty" ng-if="itemCount==0">
+					<img ng-src="img/maps/empty.png" alt="">
+					很抱歉，暂时没有评论
+					</div>
+					<div class="t-art-comment-item" ng-repeat="item in itemsData">
+						<div class="t-art-comment-img"><img ng-src="{{item.upfile}}" alt="" /></div>
+						<div class="t-art-comment-con">
+							<div class="t-art-comment-con-tit">{{item.nickname?item.nickname:telHide(item.username)}}<span>{{item.create_time * 1000 | date:'yyyy-MM-dd HH:mm'}}</span></div>
+							<div class="t-art-comment-con-lv"><em ng-if="item.rank_name">LV{{item.rank}}</em></div>
+							<div class="t-art-comment-con-con">{{item.content}}</div>
+							<div class="t-art-comment-con-reply" ng-if="item.reply">
+								<div class="t-art-comment-con-tit">商家回复<span>{{item.reply_time * 1000 | date:'yyyy-MM-dd HH:mm'}}</span></div>
+								<div class="t-art-comment-con-con">{{item.reply}}</div>
+							</div>
+						</div>
+					</div>
+					<button class="button button-block" ng-bind="loadText" ng-click="loadMoreData()" ng-if="itemCount != 0"></button>
+				</div>
+
+
+			</div>
+		</div>						
+		<!-- <ion-infinite-scroll
+			ng-if="infinite"
+		    on-infinite="loadMore()"
+		    >
+		  </ion-infinite-scroll> -->
+	</ion-content>
+		<!-- 购物功能条 S -->
+		<div class="t-art-bottom">
+			<a class="t-art-bottom-s1" href="#/index/find/shop/{{proData.store.id}}"><em>进店</em></a>
+			<!-- 如果是未收藏则去掉类名 t-art-bottom-s2-active -->
+			<a ng-class="{true:'t-art-bottom-s2 t-art-bottom-s2-active',false:'t-art-bottom-s2'}[isCollectPro]" ng-click="collectPro()"><em>收藏</em></a>
+			<a class="t-art-bottom-s3" ng-click="addCart()">加入购物车</a>
+			<a class="t-art-bottom-s4" ng-click="buy()">立即购买</a>
+		</div>
+		<!-- 购物功能条 E -->
+
+
+    <!-- 分享底部条 S -->
+    <div class="t-share-bg" ng-show="isshowShare" ng-click="showShare(0)"></div>
+    <section class="t-share-plate" ng-show="isshowShare">
+        <div class="t-share-plate-tit">分享到：
+            <i class="ion-close-round" ng-click="showShare(0)"></i>
+        </div>
+        <div class="t-share-plate-con">
+            <a class="t-share-plate-item" ng-click="wx_share('WXfriend', proData.product.name, proData.product.share_image)">
+                <div class="t-share-plate-item-pic"><img src="img/shareWXfriend.png" alt="" /></div>
+                <div class="t-share-plate-item-tit">微信好友</div>
+            </a>
+            <a class="t-share-plate-item" ng-click="wx_share('WXzone', proData.product.name, proData.product.share_image)">
+                <div class="t-share-plate-item-pic"><img src="img/shareWXzone.png" alt="" /></div>
+                <div class="t-share-plate-item-tit">朋友圈</div>
+            </a>
+        </div>
+        <!-- 		<a class="t-share-plate-item" ng-click="shareQQfriend()">
+                    <div class="t-share-plate-item-pic"><img src="img/shareQQfriend.png" alt="" /></div>
+                    <div class="t-share-plate-item-tit">QQ好友</div>
+                </a>
+                <a class="t-share-plate-item" ng-click="shareQQzone()">
+                    <div class="t-share-plate-item-pic"><img src="img/shareQQzone.png" alt="" /></div>
+                    <div class="t-share-plate-item-tit">QQ空间</div>
+                </a> -->
+    </section>
+    <!-- 分享底部条 E -->
+
+
+</ion-view>

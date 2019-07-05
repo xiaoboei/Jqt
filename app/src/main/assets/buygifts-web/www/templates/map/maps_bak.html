@@ -1,0 +1,261 @@
+<!doctype HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0">
+<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+<title> new_document </title>
+<meta name="x5-fullscreen" content="true" />
+<meta name="x5-page-mode" content="app" />
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<meta name="renderer" content="webkit">
+<style>
+html , body {width: 100%;height: 100%;padding: 0;margin: 0;}
+</style>
+<script src="../../js/common.js"></script>
+<script type="text/javascript">
+document.write('<link href="' + FILEPATH + 'lib/ionic/css/ionic.min.css" rel="stylesheet" \/>');
+document.write('<link href="' + FILEPATH + 'css/style.css" rel="stylesheet" \/>');
+document.write('<link href="' + FILEPATH + 'css/map.css" rel="stylesheet" \/>');
+
+document.write('<script src="' + FILEPATH + 'lib/hammer.min.js"><\/script>');
+document.write('<script src="' + FILEPATH + 'lib/zepto.min.js"><\/script>');
+document.write('<script src="' + FILEPATH + 'lib/vue.js"><\/script>');
+</script>
+
+</head>
+<body>
+<div id="show"></div>
+<div class="w-map-content">
+    <div class="background" id="background">
+        <img :src="scene.upfile" alt="">
+
+        <div class="locations moving" id="locaiton" :class="{'fade' : isMoving,'moving' : isMoving}">
+
+            <div class="items" v-for="item in busines.store" :style="{left : item.scene_x + 'px' , top : item.scene_y + 'px' , transform : 'scale('+itemScale+')'}">
+                <a href="../../index.html#/index/find/shop/{{item.busines_id}}" target="_top">
+                    <div class="items-avatar">
+                        <img :src="item.upfile" alt="">
+                    </div>
+                    <div class="items-content">
+                        <div class="hd">
+                            <span class="sub"><i class="icon ion-heart"></i>{{item.count}}</span>
+                            <span class="mark">{{item.name}}</span>
+                        </div>
+                        <div class="bd">{{item.comment || '很有特色 , 很喜欢 , 要是能再大点就好'}}</div>
+                    </div>
+                </a>
+            </div>
+
+            <div class="items" v-for="item in busines.scenic" :style="{left : item.scene_x + 'px' , top : item.scene_y + 'px' , transform : 'scale('+itemScale+')'}">
+                <a href="../../index.html#/index/map/scenic/{{item.busines_id}}" target="_top">
+                    <div class="items-avatar">
+                        <img :src="item.upfile" alt="">
+                    </div>
+                    <div class="items-content">
+                        <div class="bd">
+                            <p class="name">{{item.name}}</p>
+                            <p><i class="icon ion-heart"></i>{{item.count}}</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <div class="items items-sm" v-for="item in busines.talent" :style="{left : item.scene_x + 'px' , top : item.scene_y + 'px'}">
+                <a href="../../index.html#/index/map/topman/{{item.busines_id}}" target="_top">
+                    <div class="items-avatar">
+                        <img :src="item.upfile" alt="">
+                    </div>
+                    <div class="items-content">
+                        <div class="bd">
+                            <p class="name"><span class="sub"><i class="icon ion-heart"></i></span>{{item.name}}</p>
+                            <p><span class="sub">{{item.count}}</span><span class="desc">剪制艺人</span></p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+
+</div>
+<script type="text/javascript">
+
+
+// var city_id = '440100000';
+
+
+function log(msg) {
+    show.innerText = msg;
+}
+var el = document.getElementById('background');
+var show = document.getElementById('show');
+var body = document.querySelector('body');
+var START_X = 0;
+var START_Y = 0;
+var items = null;
+var transform = {};
+var ticking = false;
+var initScale = 1;
+var initWheel = 0;
+var screen_w = body.offsetWidth;
+var screen_h = body.offsetHeight;
+var w,h,minScale;
+
+var app = new Vue({
+    el : 'html',
+    data : {
+        busines : {},
+        scene : {},
+        itemScale : 1,
+        isMoving : false
+    },
+    methods : {
+        getData : function () {
+            var _this = this;
+            var city_id = '440100000';
+            var url = API.index_index + '?region_id=' + city_id;
+            $.getJSON(url,function (data) {
+                _this.busines = data.RESPONSE_INFO.busines;
+                _this.scene = data.RESPONSE_INFO.scene;
+
+                var img = el.querySelector('img');
+                img.onload = function () {
+                    w = el.offsetWidth;
+                    h = el.offsetHeight;
+
+                    if (w > h) {
+                        minScale = screen_h / h;
+                    }else {
+                        minScale = screen_w / w;
+                    }
+                    console.log(minScale);
+                }
+            })
+        },
+        onPan : function (ev) {
+            var _this = this;
+            var move_x = START_X + ev.deltaX;
+            var move_y = START_Y + ev.deltaY;
+            transform.translate = {
+                x: move_x >= 0 ? 0 : move_x < screen_w - w ? screen_w - w : move_x,
+                y: move_y >= 0 ? 0 : move_y < screen_h - h ? screen_h - h : move_y
+            }
+            _this.isMoving = true;
+            _this.requestElementUpdate();
+        },
+        onPanEnd : function (ev) {
+            var _this = this;
+            START_X = transform.translate.x;
+            START_Y = transform.translate.y;
+            _this.isMoving = false;
+        },
+        onPinch : function (ev) {
+            var _this = this;
+            if(ev.type == 'pinchstart') {
+                initScale = transform.scale || 1;
+            }
+            if (initScale * ev.scale <= 1 && initScale * ev.scale >= 0.1) {
+                transform.scale = initScale * ev.scale;
+                _this.itemScale = 1 / transform.scale;
+                transform.origin = {
+                    x : ev.center.x,
+                    y : ev.center.y
+                }
+                _this.isMoving = true;
+                _this.requestElementUpdate();
+            }
+        },
+        onPinchEnd : function () {
+            this.isMoving = false;
+        },
+        requestElementUpdate : function () {
+            var _this = this;
+            if (!ticking) {
+                requestAnimationFrame(_this.updateElementTransform);
+                ticking = true;
+            }
+        },
+        resetElement : function () {
+            var _this = this;
+            transform = {
+                translate: {
+                    x: START_X,
+                    y: START_Y
+                },
+                scale: 1,
+                itemScale : 1,
+                origin : {
+                    x : 0,
+                    y : 0
+                }
+            };
+            _this.requestElementUpdate();
+        },
+        updateElementTransform : function () {
+            var value = [
+                'translate3d(' + transform.translate.x + 'px, ' + transform.translate.y + 'px, 0)',
+                'scale(' +  transform.scale + ')'
+            ];
+            value = value.join(" ");
+            el.style.webkitTransform = value;
+            el.style.mozTransform = value;
+            el.style.transform = value;
+            el.style.transformOrigin = (transform.origin.x - transform.translate.x ) + 'px ' + (transform.origin.y - transform.translate.y) +'px';
+
+            if (items) {
+                for (var i = 0 , len=items.length; i < len ; i++) {
+                    var item = items[i];
+                    item.style.webkitTransform = 'scale('+transform.initScale+')';
+                    item.style.transform = 'scale('+transform.initScale+')';
+                }
+            }
+            ticking = false;
+        },
+        onWheel : function (ev) {
+            var _this = this;
+            var wheel = (initWheel + ev.wheelDelta) / 120 * 0.1 + 1;
+            if (wheel <= 1 && wheel >= minScale) {
+                initWheel = initWheel + ev.wheelDelta;
+                transform.scale = wheel;
+                transform.itemScale = 1 / wheel;
+                _this.itemScale = 1 / wheel ;
+                _this.requestElementUpdate();
+            }
+        }
+    },
+    ready : function () {
+        var _this = this;
+        _this.getData();
+        _this.resetElement();
+        window.onmousewheel = _this.onWheel;
+
+        var mc = new Hammer.Manager(el);
+
+        mc.add(new Hammer.Pan({
+            threshold: 0,
+            pointers: 0
+        }));
+        mc.add(new Hammer.Swipe()).recognizeWith(mc.get('pan'));
+        mc.add(new Hammer.Rotate({
+            threshold: 0
+        })).recognizeWith(mc.get('pan'));
+        mc.add(new Hammer.Pinch({
+            threshold: 0
+        })).recognizeWith([mc.get('pan'), mc.get('rotate')]);
+        mc.add(new Hammer.Tap({
+            event: 'doubletap',
+            taps: 2
+        }));
+        mc.add(new Hammer.Tap());
+
+        mc.on("panstart panmove", _this.onPan);
+        mc.on("panend", _this.onPanEnd);
+        mc.on("pinchstart pinchmove", _this.onPinch);
+        mc.on("pinchend", _this.onPinchEnd);
+    }
+})
+</script>
+</body>
+</html>

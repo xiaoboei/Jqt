@@ -1,0 +1,27 @@
+<ion-view view-title="新增地址" hide-tabs="true" hide-back-button="true">
+<ion-nav-buttons side="left" back-or-home></ion-nav-buttons>
+<ion-content>
+	<div class="list t-address-list">
+		<form name="dataForm" novalidate>
+			<label class="item item-input item-icon-right">
+				<span class="input-label">收货人：</span>
+				<input type="text" name="true_name" placeholder="请输入收货人" ng-model="dataObject.true_name" required>
+			</label>
+            <label class="item item-input">
+                <span class="input-label">联系方式：</span>
+                <input type="text" name="telephone" placeholder="请输入手机号码" ng-model="dataObject.telephone" ng-pattern="/^[0-9]{11}$/" required>
+            </label>
+			<a class="item item-input item-icon-right" ng-click="addRegion()">
+				<span class="input-label">所在地区：</span>{{regionText}}
+				<input type="text" style="display:none" name="region_id" ng-model="dataObject.region_id" required>
+				<i class="icon ion-ios-arrow-right co-cccccc fs-22"></i>
+			</a>
+			<label class="item item-input">
+				<span class="input-label">详细地址：</span>
+				<input type="text" name="address" placeholder="请输入详细地址" ng-model="dataObject.address" required>
+			</label>
+			<div class="ma-10"><input type="submit" value="确定" ng-click="addAddress(dataForm)" class="button button-assertive button-block"/></div>
+		</form>
+	</div>
+</ion-content>
+</ion-view>

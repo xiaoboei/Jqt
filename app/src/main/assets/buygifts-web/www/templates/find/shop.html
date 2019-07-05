@@ -1,0 +1,116 @@
+<ion-view view-title="商家主页" hide-tabs="true" hide-back-button="true">
+    <ion-nav-buttons side="left" back-or-home></ion-nav-buttons>
+
+    <ion-nav-buttons side="right">
+        <button class="button icon ion-share" ng-click="showShare(1)"></button>
+    </ion-nav-buttons>
+
+
+<ion-content overflow-scroll="true">
+<ion-scroll style="height:100%" overflow-scroll="true" ng-if="storeData_custom.length==0">
+	<div class="t-shop-th">
+		<div class="t-shop-th-img"><img ng-src="{{storeData.upfile}}" alt="" /></div>
+		<div class="t-shop-th-con">
+			<div class="t-shop-th-con-tit">{{storeData.name}}</div>
+			<div ng-class="{true:'t-shop-th-con-collect t-shop-th-con-collect-cur',false:'t-shop-th-con-collect'}[isCollectShop]" ng-click="collectShop()">收藏</div>
+		</div>
+	</div>
+	<!-- <div class="t-shop-bigPic"><img ng-src="img/find/shop_main.jpg" alt="" /></div> -->
+
+	<div class="t-shop-tab">
+		<a ng-class="{true:'t-shop-tab-item t-shop-tab-item-cur',false:'t-shop-tab-item'}[type==1]" ng-click="getProductData(1)">最新</a>
+		<a ng-class="{true:'t-shop-tab-item t-shop-tab-item-cur',false:'t-shop-tab-item'}[type==2]" ng-click="getProductData(2)">销量</a>
+		<a ng-class="{true:'t-shop-tab-item t-shop-tab-item-cur',false:'t-shop-tab-item'}[type==3 || type==4]" ng-click="getPriceProductData()">价格<i ng-bind="type==3?'▼':'▲'"></i></a>
+	</div>
+
+	<div class="t-shop-pro-list">
+		<div class="t-shop-pro" ng-repeat="item in itemsData">
+			<a class="t-shop-pro-pic" href="#/index/find/art/{{item.id}}"><img ng-src="{{item.upfile}}" /></a>
+			<a class="t-shop-pro-tit" href="#/index/find/art/{{item.id}}">{{item.name}}</a>
+			<div class="t-shop-pro-tf">
+				<div class="t-shop-pro-price">{{item.price | currency:"￥"}}</div>
+				<div ng-class="{true:'t-shop-pro-like t-shop-pro-like-cur',false:'t-shop-pro-like'}[item.is_fans==1]" ng-click="collectPro(item)">{{item.collection}}</div>
+			</div>
+		</div>
+	</div>
+	<!-- <button class="button button-block" ng-bind="loadText" ng-click="loadMoreData()"></button>
+	<div class="" style="height:20px;"></div> -->
+	<ion-infinite-scroll
+	ng-if="currentPage < pageCount"	
+    on-infinite="loadMoreData()"
+    distance="1%">
+  </ion-infinite-scroll>
+</ion-scroll>
+
+
+
+
+<ion-scroll style="height:100%" overflow-scroll="true" ng-if="storeData_custom.length!=0">
+
+	<div ng-repeat="item in storeData_custom">
+		<div class="t-shop-th" ng-if="item.type==1">
+			<div class="t-shop-th-img"><img ng-src="{{item.logo}}" alt="" /></div>
+			<div class="t-shop-th-con">
+				<div class="t-shop-th-con-tit">{{item.seller_name}}</div>
+				<div ng-class="{true:'t-shop-th-con-collect t-shop-th-con-collect-cur',false:'t-shop-th-con-collect'}[isCollectShop]" ng-click="collectShop()">收藏</div>
+			</div>
+		</div>
+
+		<div class="t-shop-bigPic" ng-if="item.type==2 && item.banner_show==2"><img ng-repeat="item2 in item.upfile" ng-src="{{item2}}" alt="" /></div>
+        <ion-slide-box does-continue="true" class="t-slider-wrap" ng-if="item.type==2 && item.banner_show==1">
+            <ion-slide ng-repeat="item2 in item.upfile">
+                <a class="t-slider" href="javascript:;" style="background-image:url({{item2}});"></a>
+                <!--ng-click="locationHref(item.link)"-->
+            </ion-slide>
+        </ion-slide-box>
+
+		<div class="t-shop-nav" ng-if="classifyData.length>0 && item.type==3 && item.show">
+			<a href="{{item2.ids[0].href}}" ng-repeat="item2 in classifyData">{{item2.ids[0].name}}</a>
+		</div>
+
+
+		<!-- <div class="t-shop-pro-list"> -->
+			<div class="t-shop-pro" ng-if="item.type==4">
+				<a class="t-shop-pro-pic" href="#/index/find/art/{{item.product_id}}"><img ng-src="{{item.upfile}}" /></a>
+				<a class="t-shop-pro-tit" href="#/index/find/art/{{item.product_id}}">{{item.name}}</a>
+				<div class="t-shop-pro-tf">
+					<div class="t-shop-pro-price">{{item.price | currency:"￥"}}</div>
+					<div ng-class="{true:'t-shop-pro-like t-shop-pro-like-cur',false:'t-shop-pro-like'}[item.is_fans==1]" ng-click="collectPro(item)">{{item.collection}}</div>
+				</div>
+			</div>
+		<!-- </div> -->
+
+
+	</div>
+</ion-scroll>
+</ion-content>
+
+    <!-- 分享底部条 S -->
+    <div class="t-share-bg" ng-show="isshowShare" ng-click="showShare(0)"></div>
+    <section class="t-share-plate" ng-show="isshowShare">
+        <div class="t-share-plate-tit">分享到：
+            <i class="ion-close-round" ng-click="showShare(0)"></i>
+        </div>
+        <div class="t-share-plate-con">
+            <a class="t-share-plate-item" ng-click="wx_share('WXfriend',storeData.name, storeData.upfile)">
+                <div class="t-share-plate-item-pic"><img src="img/shareWXfriend.png" alt="" /></div>
+                <div class="t-share-plate-item-tit">微信好友</div>
+            </a>
+            <a class="t-share-plate-item" ng-click="wx_share('WXzone',storeData.name, storeData.upfile)">
+                <div class="t-share-plate-item-pic"><img src="img/shareWXzone.png" alt="" /></div>
+                <div class="t-share-plate-item-tit">朋友圈</div>
+            </a>
+        </div>
+        <!-- 		<a class="t-share-plate-item" ng-click="shareQQfriend()">
+                    <div class="t-share-plate-item-pic"><img src="img/shareQQfriend.png" alt="" /></div>
+                    <div class="t-share-plate-item-tit">QQ好友</div>
+                </a>
+                <a class="t-share-plate-item" ng-click="shareQQzone()">
+                    <div class="t-share-plate-item-pic"><img src="img/shareQQzone.png" alt="" /></div>
+                    <div class="t-share-plate-item-tit">QQ空间</div>
+                </a> -->
+    </section>
+    <!-- 分享底部条 E -->
+
+</ion-view>
+

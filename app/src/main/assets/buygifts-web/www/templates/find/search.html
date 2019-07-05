@@ -1,0 +1,115 @@
+<ion-view view-title="搜索" hide-back-button="true">
+<ion-nav-buttons side="left" back-or-home></ion-nav-buttons>
+<ion-nav-title>
+    <form method="post" class="w-search-form" ng-submit="search()">
+        <i class="ion-ios-search-strong"></i>
+        <input type="text" class="w-search-input Jinput" type="search" id="_keyword">
+    </form>
+</ion-nav-title>
+<ion-nav-buttons side="right">
+    <a href="javascript:;" class="w-search-btn" ng-click="search()">搜索</a>
+</ion-nav-buttons>
+<ion-content>
+<div class="w-search">
+
+    <div ng-show="isSearch == false">
+        <!-- 热搜 -->
+        <!--<div class="w-search-hot">-->
+            <!--<span>热搜</span><a href="#/index/find/search/广州塔">广州塔</a><a href="#/index/find/search/明信片">明信片</a><a href="#/index/find/search/广州小吃">广州小吃</a><a href="#/index/find/search/饮茶">饮茶</a>-->
+        <!--</div>-->
+
+        <div class="w-search-gap"></div>
+
+        <!-- 搜索历史 -->
+        <ul class="w-search-history" ng-show="searchHistory.length">
+            <li class="hd">历史搜索</li>
+            <li ng-repeat="item in searchHistory track by $index"><a href="#/index/search/{{item}}" >{{item}}</a></li>
+        </ul>
+    </div>
+
+    <div ng-show="isSearch">
+
+    <div class="w-search-empty" ng-show="isEmpty">
+        <img src="img/maps/empty.png" alt="">
+        很抱歉，暂时没有相关内容
+    </div>
+
+        <!-- 相关景点 -->
+        <div ng-show="scenicData.scenic.length">
+            <div class="w-search-hd">相关介绍</div>
+            <div class="w-search-view">
+                <a href="#/index/map/scenic/{{item.id}}" ng-repeat="item in scenicData.scenic">
+                    <img ng-src="{{item.logo}}" alt="" class="preview">
+                    <p class="title">{{item.name}} </p>
+                    <p class="addr">{{item.address}}</p>
+                    <p class="desc">{{item.content | trustHtml}}</p>
+                </a>
+                <a href="javascript:;" class="more" ng-click="getMore('scenic')" ng-show="scenicData.page.pageCount > scenicData.page.currentPage">查看更多</a>
+            </div>
+        </div>
+
+        <!-- 相关买手 -->
+        <div ng-show="articleData.article.length">
+            <div class="w-search-hd">相关买手推荐</div>
+            <div class="w-search-buyer">
+                <a href="#/index/find/talent/art/{{item.id}}" ng-repeat="item in articleData.article">
+                    <img ng-src="{{item.upfile}}" alt="" class="avatar">
+                    <p class="title">{{item.title}}</p>
+                    <p class="desc"><span class="date">{{item.create_time * 1000 | date:'yyyy-MM-dd HH:mm'}}</span>by : {{item.name}}</p>
+                </a>
+                <a href="javascript:;" class="more" ng-click="getMore('article')" ng-show="articleData.page.pageCount > articleData.page.currentPage">查看更多</a>
+            </div>
+        </div>
+
+        <div ng-show="talentData.talent.length">
+            <div class="w-search-hd">相关达人</div>
+            <!-- 相关达人 -->
+            <div class="w-search-user">
+                <a href="#/index/find/talent/{{item.id}}" ng-repeat="item in talentData.talent">
+                    <img ng-src="{{item.upfile}}" alt="" class="avatar">
+                    <p class="title">{{item.name}}</p>
+                    <p class="desc"><span class="level">LV5</span>{{item.rank_name}}</p>
+                </a>
+                <a href="javascript:;" class="more" ng-click="getMore('talent')" ng-show="talentData.page.pageCount > talentData.page.currentPage">查看更多</a>
+            </div>
+        </div>
+
+        <div ng-show="storeData.store.length">
+            <div class="w-search-hd">相关店铺</div>
+            <!-- 相关店铺 -->
+            <div class="w-search-store">
+                <a href="#/index/find/shop/{{item.id}}" ng-repeat="item in storeData.store">
+                    <img ng-src="{{item.upfile}}" alt="" class="avatar">
+                    <p class="title">{{item.name}}</p>
+                    <p class="desc"><span>{{item.city}}</span><span>销量{{item.sales}}</span><span>共{{item.count}}件宝贝</span></p>
+                </a>
+                <a href="javascript:;" class="more" ng-click="getMore('store')" ng-show="storeData.page.pageCount > storeData.page.currentPage">查看更多</a>
+            </div>
+        </div>
+
+        <div ng-show="productData.product.length">
+            <div class="w-search-hd">相关产品</div>
+            <!-- 相关产品 -->
+            <div class="w-search-product">
+                <div class="product-item" ng-repeat="item in productData.product">
+                    <a href="#/index/find/art/{{item.id}}">
+                        <img ng-src="{{item.upfile}}" alt="" class="preview">
+                        <p class="title">{{item.name}}</p>
+                    </a>
+                    <p class="desc"><a href="javascript:;" ng-click="focus(item)"><span class="like"><i ng-class="{'ion-android-favorite-outline' : item.is_fans == '0' , 'ion-android-favorite' : item.is_fans == '1'}"></i> {{item.collection}}</span></a><span class="price">￥{{item.price}}</span></p>
+                </div>
+                <a href="javascript:;" class="more" ng-click="getMore('product')" ng-show="productData.page.pageCount > productData.page.currentPage">查看更多</a>
+            </div>
+        </div>
+
+
+<!--         <div class="w-search-more">
+            <a href="">查看更多 ></a>
+        </div> -->
+    </div>
+
+</div>
+
+
+</ion-content>
+</ion-view>

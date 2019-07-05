@@ -1,0 +1,25 @@
+<ion-view view-title="申请售后服务" hide-tabs="true" hide-back-button="true">
+	<!-- <ion-nav-buttons side="left" back-or-home></ion-nav-buttons> -->
+	<ion-nav-buttons side="left">
+		<button class="button icon ion-ios-arrow-back button-clear" ng-click="goDetail()"></button>
+	</ion-nav-buttons>
+	<ion-content class="bg-f4f4f4" overflow-scroll="true">
+		<a class="t-mine-order-tb" href="#/index/find/art/{{wantToReturnData.product_json.product_id}}" style="margin-bottom:15px;">
+			<div class="t-mine-order-tb-img"><img ng-src="{{wantToReturnData.product_json.upfile}}" alt="" /></div>
+			<div class="t-mine-order-tb-con">
+				<div class="t-mine-order-tb-con-tit">{{wantToReturnData.product_json.name}}</div>
+				<div class="t-mine-order-tb-con-num">{{wantToReturnData.product_json.price | currency:"￥"}}&emsp;数量:{{wantToReturnData.product_json.num}}</div>
+			</div>
+		</a>
+		<div class="t-return-item">
+			<div class="t-pay-ok">
+				<div class="t-pay-ok-icon"></div>
+				<div class="t-pay-ok-con">
+					<div class="t-pay-ok--tit">申请售后服务成功</div>
+					<div class="t-pay-ok-des">订单单号：{{wantToSubmitReturnNumber}}</div>
+				</div>
+			</div>
+			<div class="ma-10"><button class="button button-assertive button-block" ng-click="goDetail()">查看服务单</button></div>
+		</div>
+	</ion-content>
+</ion-view>

@@ -21,7 +21,7 @@ import android.webkit.WebViewClient;
 
     private WebView webView;
     String url = "https://m.tuliyou.com/h5/app";
-//    String url = "http://m.tuliyou.com/h5/app";
+    String localUrl = "file:///android_assets/buygifts-web/www/index.html";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,7 +97,8 @@ import android.webkit.WebViewClient;
             }
         });
 
-        webView.loadUrl(url);
+//        webView.loadUrl(url);
+        webView.loadUrl(localUrl);
     }
 
     @Override

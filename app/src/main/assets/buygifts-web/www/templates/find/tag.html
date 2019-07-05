@@ -1,0 +1,37 @@
+<!-- 如果有些页面想隐藏tab的话 在 ion-view 标签上添加 hide-tabs 属性 -->
+<ion-view view-title="{{tag_name}}" hide-tabs="true" hide-back-button="true">
+<ion-nav-buttons side="left" back-or-home></ion-nav-buttons>
+<ion-nav-title>{{tag_name}}</ion-nav-title>
+<!-- 主体 -->
+<ion-content>
+	<ion-scroll style="height:100%" overflow-scroll="true">
+	<div class="t-shop-tab">
+		<a ng-class="{true:'t-shop-tab-item t-shop-tab-item-cur',false:'t-shop-tab-item'}[type==1]" ng-click="getProductData(1)">最新</a>
+		<a ng-class="{true:'t-shop-tab-item t-shop-tab-item-cur',false:'t-shop-tab-item'}[type==2]" ng-click="getProductData(2)">销量</a>
+		<a ng-class="{true:'t-shop-tab-item t-shop-tab-item-cur',false:'t-shop-tab-item'}[type==3 || type==4]" ng-click="getPriceProductData()">价格<i ng-bind="type==3?'▼':'▲'"></i></a>
+	</div>
+	<div class="t-empty" ng-if="loadText == '暂无数据'">
+	<img ng-src="img/maps/empty.png" alt="">
+	很抱歉，暂时没有相关内容
+	</div>
+
+	<div class="t-shop-pro-list">
+		<div class="t-shop-pro" ng-repeat="item in itemsData">
+			<a class="t-shop-pro-pic" href="#/index/find/art/{{item.id}}" style="background-image:url({{item.upfile}});"></a>
+			<a class="t-shop-pro-tit" href="#/index/find/art/{{item.id}}">{{item.name}}</a>
+			<div class="t-shop-pro-tf">
+				<div class="t-shop-pro-price">{{item.price | currency:"￥"}}</div>
+				<div ng-class="{true:'t-shop-pro-like t-shop-pro-like-cur',false:'t-shop-pro-like'}[item.is_fans==1]" ng-click="collectPro(item)">{{item.collection}}</div>
+			</div>
+		</div>
+	</div>
+	<ion-infinite-scroll	
+	ng-if="currentPage < pageCount"	
+    on-infinite="loadMoreData()"
+    distance="1%">
+  </ion-infinite-scroll>
+	<!-- <button class="button button-block" ng-bind="loadText" ng-click="loadMoreData()" ng-if="loadText != '没有更多数据了' && loadText != '暂无数据'"></button>
+	<div class="" style="height:20px;"></div> -->
+	</ion-scroll>
+</ion-content>
+</ion-view>

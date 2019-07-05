@@ -1,0 +1,62 @@
+<ion-view view-title="{{type_name}}" hide-back-button="true">
+	<ion-nav-buttons side="left">
+		<button class="button icon ion-ios-arrow-back button-clear" ui-sref="index.mine"></button>
+	</ion-nav-buttons>
+	<ion-content class="bg-f4f4f4" overflow-scroll="true">
+
+		<ion-scroll style="height:100%" overflow-scroll="true">
+			<div class="t-mine-order-search">
+				<form name="dataForm" novalidate ng-submit="search(dataForm)">
+					<label>
+						<input type="search" name="search" id="Jsearch" placeholder="商品名称 订单编号" ng-model="dataObject.search" required>
+					</label>
+				</form>
+			</div>
+			<div class="t-empty" ng-if="itemsData.length==0">
+			<img ng-src="img/maps/empty.png" alt="">
+			很抱歉，暂时没有相关订单
+			</div>
+			<div class="t-mine-order" ng-repeat="item in itemsData">
+				<a class="t-mine-order-th" href="#/index/mine/order/detail/{{item.order_id}}">
+					<div class="t-mine-order-th-l">
+						<img ng-src="{{item.seller_logo}}" alt="" />
+						<div class="t-mine-order-th-l-tit">{{item.seller_name}}</div>
+					</div>
+					<div class="t-mine-order-th-r" ng-if="item.status==1">待付款</div>
+					<div class="t-mine-order-th-r" ng-if="item.status==2">等待商家发货</div>
+					<div class="t-mine-order-th-r" ng-if="item.status==3">待确认收货</div>
+					<div class="t-mine-order-th-r" ng-if="item.status==4">完成</div>
+					<div class="t-mine-order-th-r" ng-if="item.status==5">待退款</div>
+					<div class="t-mine-order-th-r" ng-if="item.status==6">已取消</div>
+					<div class="t-mine-order-th-r" ng-if="item.status==7">待退货</div>
+				</a>
+				<a class="t-mine-order-tb" ng-repeat="item2 in item.product | limitTo:1" href="#/index/mine/order/detail/{{item.order_id}}">
+					<div class="t-mine-order-tb-img"><img ng-src="{{item2.upfile}}" alt="" /></div>
+					<div class="t-mine-order-tb-con">
+						<div class="t-mine-order-tb-con-tit" style="width:70%;">{{item2.name}}</div>
+						<div class="t-mine-order-tb-con-num">X{{item2.num}}</div>
+						<div class="t-mine-order-tb-con-price">{{item2.price | currency:"￥"}}</div>
+					</div>
+				</a>
+				<div class="t-mine-order-tf">
+					<div class="t-mine-order-tf-l">实付款：{{item.pay | currency:"￥"}}</div>
+					<div class="t-mine-order-tf-r">
+					<a ng-if="item.status==1" href="#/index/mine/order/detail/{{item.order_id}}">去支付</a>
+					<a ng-if="item.status==2" href="#/index/mine/order/detail/{{item.order_id}}">待发货</a>
+					<a ng-if="item.status==3" href="#/index/mine/order/detail/{{item.order_id}}">确认收货</a>
+					<a ng-if="item.status==4" href="#/index/mine/order/detail/{{item.order_id}}">查看详情</a>
+					<a ng-if="item.status==5" href="#/index/mine/order/detail/{{item.order_id}}">待退款</a>
+					<a ng-if="item.status==6" href="#/index/mine/order/detail/{{item.order_id}}">已取消</a>
+					<a ng-if="item.status==7" href="#/index/mine/order/detail/{{item.order_id}}">待退货</a>
+					</div>
+				</div>
+			</div>			
+			<ion-infinite-scroll	
+			ng-if="currentPage < pageCount"	
+		    on-infinite="loadMoreData()"
+		    distance="1%">
+		  </ion-infinite-scroll>
+		</ion-scroll>
+	
+	</ion-content>
+</ion-view>

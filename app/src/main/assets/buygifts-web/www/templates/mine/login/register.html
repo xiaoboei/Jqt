@@ -1,0 +1,45 @@
+<ion-view view-title="注册" hide-tabs="true" hide-back-button="true">
+	<ion-nav-buttons side="left" back-or-home></ion-nav-buttons>
+
+	<ion-content class="t-login-bg" overflow-scroll="true">
+	<!-- <button class="button icon ion-ios-arrow-back button-clear t-back-button" ng-click="back()"></button> -->
+		<div class="list t-login">
+			<div class="t-login-img">
+				<!-- <img src="img/avt.png" alt="" /> -->
+				<!-- <img src="http://buygifts.3ncto.com.cn/www/img/avt.png" alt="" /> -->
+				<img id="Jpic" ng-src="{{avt}}" alt="" />
+				<input id="upfile" type="file" accept="image/jpg,image/jpeg,image/png,image/gif" />
+			</div>
+            <div class="t-login-text">
+                <h1>Hi 您来了</h1>
+                <p>欢迎来到粤桂黔！<br/>晒出旅行中的发现，分享好物的故事</p>
+            </div>
+			<form name="dataForm" novalidate>
+				<label class="item item-input">
+					<input type="tel" name="username" placeholder="请输入手机号码" ng-model="dataObject.username" ng-pattern="/^[0-9]{11}$/" required>
+				</label>
+				<div class="item item-input-inset">
+					<label class="item-input-wrapper">
+						<input type="text" name="code" placeholder="请输入验证码" ng-model="dataObject.code" required>
+					</label>
+					<button class="button button-small button-outline" ng-click="sendVerifyCode(dataForm)" ng-disabled="sendVerifyCodeDisable" ng-bind="sendVerifyCodeText"></button>
+				</div>
+				<label class="item item-input">
+					<input type="password" name="password" placeholder="请输入密码 6到16位" ng-model="dataObject.password" ng-minlength="6" ng-maxlength="16" required>
+				</label>
+				<label class="item item-input">
+					<input type="password" name="repassword" placeholder="请确认密码" ng-model="dataObject.repassword" ng-minlength="6" ng-maxlength="16" required>
+				</label>
+				<label class="item item-input">
+					<input type="text" name="number" placeholder="请输入邀请码(选填)" ng-model="dataObject.number">
+				</label>
+                <div class="t-login-line">
+                    <a ui-sref="index.mine-login" class="t-login-line-l positive">立即登录</a>
+                    <a ui-sref="index.mine-registerClause" class="t-login-line-r positive">服务条款</a><a class="t-login-line-r">当你点击注册时，表示同意我们的</a>
+                </div>
+                <input type="submit" value="注册" class="button button-outline button-block t-login-button" ng-click="register(dataForm)"/>
+			</form>
+		</div>
+
+	</ion-content>
+</ion-view>

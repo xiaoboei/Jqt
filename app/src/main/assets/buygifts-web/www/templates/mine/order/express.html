@@ -1,0 +1,25 @@
+<ion-view view-title="物流信息" hide-tabs="true" hide-back-button="true">
+    <ion-nav-buttons side="left" back-or-home></ion-nav-buttons>
+    <ion-content>
+        <table id="express_table_cls">
+            <tr>
+                <th>时间</th>
+                <th>地点和跟踪进度</th>
+            </tr>
+            <tr ng-if="expressData.status==200" ng-repeat="item in expressData.data">
+                <td ng-if="$index==0" style="color:#ff9e40;">{{item.time}}</td>
+                <td ng-if="$index>0">{{item.time}}</td>
+                <td ng-if="$index==0" style="color:#ff9e40;">{{item.context}}</td>
+                <td ng-if="$index>0">{{item.context}}</td>
+            </tr>
+            <tr>
+                <td ng-if="expressData.status!=200" colspan="2" class="text-center" style="line-height: 60px;">{{expressData.message}}</td>
+            </tr>
+            <tr>
+                <td colspan="2" class="text-center" style="line-height: 60px;">
+                    查询数据由：<a href="javascript:;" ng-click="cordovaOpen('http://kuaidi100.com')">KuaiDi100.Com （快递100）</a> 网站提供
+                </td>
+            </tr>
+        </table>
+    </ion-content>
+</ion-view>
