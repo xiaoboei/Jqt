@@ -26,4 +26,10 @@ public class BaseActivity extends AppCompatActivity {
     }
 
 
+    public boolean isActivityAlive(){
+        boolean isAlive = false;
+        isAlive = !isFinishing() && !isDestroyed();
+        return isAlive;
+    }
+
 }

@@ -1,27 +1,66 @@
-         package com.juyou.jqt;
+package com.juyou.jqt;
 
+import android.Manifest;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.Uri;
 import android.net.http.SslError;
 import android.os.Build;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.webkit.CookieSyncManager;
 import android.webkit.SslErrorHandler;
-import android.webkit.WebChromeClient;
-import android.webkit.WebResourceError;
-import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-         public class MainActivity extends BaseActivity {
+import com.juyou.jqt.dialog.CheckPermissionDiaologV2;
+import com.juyou.jqt.util.UtilRequestPermissions;
+
+public class MainActivity extends BaseActivity {
+
+
+    //1 存储、 2相机 0 默认
+    private int requestPermissionType = 0;
+    /**
+     * 要求权限
+     */
+    private CheckPermissionDiaologV2 checkPermissionDiaolog;
+
 
     private WebView webView;
-    String url = "https://m.tuliyou.com/h5/app";
+    String url = "http://scenic.test.tuliyou.com/webadmin/";
 //    String url = "http://m.tuliyou.com/h5/app";
+
+    private JqtJSinterface jqtJSinterface;
+
+
+    /**
+     * 登录成功广播
+     */
+    private BroadcastReceiver scanOrcodeResultReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent != null && JqtJSinterface.SCAN_ORCODE_BROADCAST.equals(intent.getAction())) {
+                Bundle bundle = intent.getExtras();
+                Log.e("my", "scanOrcodeResultReceiver:" + bundle);
+                if (bundle != null) {
+                    String orcodeResult = bundle.getString(JqtJSinterface.TAG_SCANRESULT);
+                    if (webView != null) {
+                        String fun = "javascript:get_extract_code('" + orcodeResult + "')";
+                        Log.e("my","fun:" + fun);
+                        webView.loadUrl(fun);
+                    }
+                }
+            }
+        }
+    };
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,11 +68,18 @@ import android.webkit.WebViewClient;
         setContentView(R.layout.activity_main);
         webView = findViewById(R.id.webView);
 
+        IntentFilter filter = new IntentFilter(JqtJSinterface.SCAN_ORCODE_BROADCAST);
+        LocalBroadcastManager.getInstance(this).registerReceiver(scanOrcodeResultReceiver, filter);
+
+        jqtJSinterface = new JqtJSinterface(this);
+        webView.addJavascriptInterface(jqtJSinterface, "activity");
+
+
         WebSettings webSetting = webView.getSettings();
         webSetting.setJavaScriptEnabled(true);
         webSetting.setBlockNetworkImage(false);//解决图片不显示
-		webSetting.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.NARROW_COLUMNS);
-		webSetting.setSupportZoom(true);
+        webSetting.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.NARROW_COLUMNS);
+        webSetting.setSupportZoom(true);
         webSetting.setBuiltInZoomControls(true);
         if (Build.VERSION.SDK_INT >= 19) {
             webSetting.setLoadsImagesAutomatically(true);
@@ -42,8 +88,8 @@ import android.webkit.WebViewClient;
         }
         webSetting.setUseWideViewPort(true);
         webSetting.setLoadWithOverviewMode(true);
-		webSetting.setAppCacheEnabled(true);
-		webSetting.setDatabaseEnabled(true);
+        webSetting.setAppCacheEnabled(true);
+        webSetting.setDatabaseEnabled(true);
         webSetting.setDomStorageEnabled(true);
         webSetting.setGeolocationEnabled(true);
         webSetting.setPluginState(WebSettings.PluginState.ON);
@@ -70,7 +116,7 @@ import android.webkit.WebViewClient;
         // settings 的设计
 //        CookieSyncManager.createInstance(this);
 //        CookieSyncManager.getInstance().sync();
-        webView.setWebViewClient(new WebViewClient(){
+        webView.setWebViewClient(new WebViewClient() {
             @Override
             public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
                 super.onReceivedSslError(view, handler, error);
@@ -80,14 +126,14 @@ import android.webkit.WebViewClient;
             @Override
             public void onLoadResource(WebView view, String url) {
                 super.onLoadResource(view, url);
-                Log.e("my","onLoadResource: " + url);
+//                Log.e("my", "onLoadResource: " + url);
             }
 
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                Log.e("my","shouldOverrideUrlLoading: " + url);
-                if(url!= null && url.startsWith("tel:")){
-                    Intent phoneIntent = new Intent( Intent.ACTION_DIAL, Uri.parse(url));
+                Log.e("my", "shouldOverrideUrlLoading: " + url);
+                if (url != null && url.startsWith("tel:")) {
+                    Intent phoneIntent = new Intent(Intent.ACTION_DIAL, Uri.parse(url));
                     phoneIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     // 启动
                     startActivity(phoneIntent);
@@ -102,15 +148,77 @@ import android.webkit.WebViewClient;
 
     @Override
     public boolean onKeyUp(int keyCode, KeyEvent event) {
-        if(keyCode == KeyEvent.KEYCODE_BACK){
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
             //返回
-            if(webView != null && webView.canGoBack()){
+            if (webView != null && webView.canGoBack()) {
                 webView.goBack();
                 return true;
-            } else if(webView != null && !webView.canGoBack()){
+            } else if (webView != null && !webView.canGoBack()) {
                 //系统处理
             }
         }
         return super.onKeyUp(keyCode, event);
+    }
+
+    /**
+     * 显示对话框
+     */
+    public void showPermissionDialog() {
+        if (checkPermissionDiaolog == null) {
+            checkPermissionDiaolog = new CheckPermissionDiaologV2(this);
+            checkPermissionDiaolog.setTitleText(getString(R.string.permission_tips));
+        }
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (isActivityAlive()) {
+                    checkPermissionDiaolog.show();
+                }
+            }
+        });
+    }
+
+    public void dismissPermissionDialog() {
+        if (checkPermissionDiaolog != null && checkPermissionDiaolog.isShowing() && isActivityAlive()) {
+            checkPermissionDiaolog.dismiss();
+        }
+    }
+
+
+    public void setRequestPermissionType(int requestPermissionType) {
+        this.requestPermissionType = requestPermissionType;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case UtilRequestPermissions.REQUEST_CODE_ACTIVITY_CAMERA:
+                boolean camer_permission = UtilRequestPermissions.checkSelfPermission(this, Manifest.permission.CAMERA);
+                if (camer_permission) {
+                    Intent help = new Intent();
+                    help.setClass(this, CaptureActivity.class);
+                    this.startActivity(help);
+                } else {
+                    //如果应用之前请求过此权限但用户拒绝了请求，此方法将返回 true。
+                    Log.e("my", "onRequestPermissionsResult shouldShowRequestPermissionRationale camer_permission :" + ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CAMERA));
+                    if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CAMERA)) {
+                        break;
+                    } else {
+                        // 如果用户在过去拒绝了权限请求，并在权限请求系统对话框中选择了 Don’t ask again 选项，此方法将返回 false。如果设备规范禁止应用具有该权限，此方法也会返回 false。
+                        showPermissionDialog();
+                    }
+                }
+                break;
+
+        }
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(scanOrcodeResultReceiver);
+        dismissPermissionDialog();
     }
 }

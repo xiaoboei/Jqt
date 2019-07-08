@@ -4,7 +4,7 @@ android {
     compileSdkVersion 28
     buildToolsVersion "28.0.3"
     defaultConfig {
-        applicationId "com.juyou.jqt"
+        applicationId "com.juyou.jqt_hxd"
         minSdkVersion 17
         targetSdkVersion 28
         versionCode 1
@@ -18,6 +18,11 @@ android {
         }
     }
 }
+repositories {
+    flatDir {
+        dirs 'libs'
+    }
+}
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
@@ -26,4 +31,5 @@ dependencies {
     implementation 'android.arch.navigation:navigation-ui:1.0.0'
     compile  'com.umeng.umsdk:analytics:7.5.4'
     compile  'com.umeng.umsdk:common:1.5.4'
+
 }

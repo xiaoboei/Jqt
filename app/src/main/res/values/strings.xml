@@ -1,3 +1,12 @@
 <resources>
-    <string name="app_name">景区通</string>
+    <string name="app_name">核销端</string>
+    <string name="app_name_hxd">核销端</string>
+
+    <string name="scan_tips">将二维码放入框内，即可自动扫描</string>
+
+    <string name="permission_tips">因未开通相应权限，不能正常使用该功能。立即去开通？</string>
+    <string name="permission_storage_tips">没有存储权限可能会影响APP正常使用，建议去开通</string>
+    <string name="permission_request_tips">去系统设置中开通当前权限？</string>
+    <string name="permission_close_tips">关闭该权限可能会影响APP正常使用，确定要关闭？</string>
+
 </resources>

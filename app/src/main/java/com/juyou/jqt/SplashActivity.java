@@ -17,13 +17,14 @@ public class SplashActivity extends BaseActivity {
             @Override
             public void run() {
                 Intent intent;
-                SharedPreferences sharedPreferences = getSharedPreferences("jqt", Context.MODE_PRIVATE);
-                String result = sharedPreferences.getString("help","");
-                if("1".equals(result)){
-                    intent = new Intent(SplashActivity.this, MainActivity.class);
-                } else {
-                    intent = new Intent(SplashActivity.this, HelpActivity.class);
-                }
+//                SharedPreferences sharedPreferences = getSharedPreferences("jqt", Context.MODE_PRIVATE);
+//                String result = sharedPreferences.getString("help","");
+//                if("1".equals(result)){
+//                    intent = new Intent(SplashActivity.this, MainActivity.class);
+//                } else {
+//                    intent = new Intent(SplashActivity.this, HelpActivity.class);
+//                }
+                intent = new Intent(SplashActivity.this, MainActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
                 finish();
